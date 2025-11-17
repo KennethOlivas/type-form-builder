@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Plus, FileText, Eye, Copy, Trash2, MoreVertical, Share } from 'lucide-react'
 import Link from "next/link"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useFormsList, useDeleteForm, useDuplicateForm } from "@/lib/hooks/use-forms"
+import { useFormsList, useDeleteForm, useDuplicateForm } from "@/hooks/use-forms"
 import { ShareFormModal } from "@/components/share-form-modal"
 import { useState } from "react"
 
