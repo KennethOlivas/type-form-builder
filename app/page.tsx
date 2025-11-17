@@ -15,12 +15,25 @@ import {
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
+import DotGrid from "@/components/dot-grid";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground relative">
       {/* Animated dot grid background */}
-      <div className="fixed inset-0 z-0"></div>
+      <div className="fixed inset-0 z-0 ">
+        <DotGrid
+          dotSize={4}
+          gap={40}
+          baseColor="#1e293b"
+          activeColor="#6366f1"
+          proximity={180}
+          speedTrigger={120}
+          shockRadius={200}
+          shockStrength={8}
+          className="opacity-40"
+        />
+      </div>
 
       {/* Content with z-index and relative positioning */}
       <div className="relative z-10">

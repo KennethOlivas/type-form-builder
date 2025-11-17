@@ -146,7 +146,7 @@ export default function DashboardPage() {
 
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
                   <Link href="/builder/new">
-                    <div className="bg-card backdrop-blur-xl border border-border border-dashed rounded-2xl p-6 hover:bg-accent/50 transition-all cursor-pointer h-full min-h-[240px] flex items-center justify-center">
+                    <div className="bg-card backdrop-blur-xl border border-border border-dashed rounded-2xl p-6 hover:bg-accent/50 transition-all cursor-pointer h-full min-h-60 flex items-center justify-center">
                       <div className="text-center">
                         <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
                           <Plus className="w-8 h-8 text-primary" />
