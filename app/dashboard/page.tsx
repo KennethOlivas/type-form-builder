@@ -1,44 +1,70 @@
-"use client"
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Plus, FileText, Eye, Copy, Trash2, MoreVertical, Share } from 'lucide-react'
-import Link from "next/link"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useFormsList, useDeleteForm, useDuplicateForm } from "@/hooks/use-forms"
-import { ShareFormModal } from "@/components/share-form-modal"
-import { useState } from "react"
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import {
+  Plus,
+  FileText,
+  Eye,
+  Copy,
+  Trash2,
+  MoreVertical,
+  Share,
+} from "lucide-react";
+import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  useFormsList,
+  useDeleteForm,
+  useDuplicateForm,
+} from "@/hooks/use-forms";
+import { ShareFormModal } from "@/components/share-form-modal";
+import { useState } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function DashboardPage() {
-  const { data: forms = [], isLoading } = useFormsList()
-  const deleteFormMutation = useDeleteForm()
-  const duplicateFormMutation = useDuplicateForm()
-  const [shareModalOpen, setShareModalOpen] = useState(false)
-  const [selectedForm, setSelectedForm] = useState<{ id: string; title: string } | null>(null)
+  const { data: forms = [], isLoading } = useFormsList();
+  const deleteFormMutation = useDeleteForm();
+  const duplicateFormMutation = useDuplicateForm();
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedForm, setSelectedForm] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const handleDelete = (id: string) => {
-    deleteFormMutation.mutate(id)
-  }
+    deleteFormMutation.mutate(id);
+  };
 
   const handleDuplicate = (id: string) => {
-    duplicateFormMutation.mutate(id)
-  }
+    duplicateFormMutation.mutate(id);
+  };
 
   const handleShare = (id: string, title: string) => {
-    setSelectedForm({ id, title })
-    setShareModalOpen(true)
-  }
+    setSelectedForm({ id, title });
+    setShareModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="bg-card/50 backdrop-blur-xl border-b border-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
           <h1 className="text-2xl font-bold">FormFlow</h1>
-          <Link href="/builder/new">
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground min-h-12">
-              <Plus className="w-4 h-4 mr-2" />
-              New Form
-            </Button>
-          </Link>
+
+          <nav className="flex items-center gap-4">
+            <ThemeToggle />
+
+            <Link href="/builder/new">
+              <Button>
+                <Plus />
+                New Form
+              </Button>
+            </Link>
+          </nav>
         </div>
       </header>
 
@@ -71,13 +97,21 @@ export default function DashboardPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <FileText className="w-5 h-5 text-primary" />
-                          <h3 className="text-xl font-semibold">{form.title}</h3>
+                          <h3 className="text-xl font-semibold">
+                            {form.title}
+                          </h3>
                         </div>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{form.description}</p>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                          {form.description}
+                        </p>
 
                         <div className="flex items-center justify-between text-sm mb-4 pt-4 border-t border-border">
-                          <span className="text-muted-foreground">Responses</span>
-                          <span className="font-semibold">{form.responses}</span>
+                          <span className="text-muted-foreground">
+                            Responses
+                          </span>
+                          <span className="font-semibold">
+                            {form.responses}
+                          </span>
                         </div>
                       </div>
 
@@ -144,15 +178,23 @@ export default function DashboardPage() {
                   </motion.div>
                 ))}
 
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
                   <Link href="/builder/new">
-                    <div className="bg-card backdrop-blur-xl border border-border border-dashed rounded-2xl p-6 hover:bg-accent/50 transition-all cursor-pointer h-full min-h-60 flex items-center justify-center">
+                    <div className="bg-card backdrop-blur-xl border border-border border-dashed rounded-2xl p-6 hover:bg-accent transition-all cursor-pointer h-full min-h-60 flex items-center justify-center">
                       <div className="text-center">
                         <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
                           <Plus className="w-8 h-8 text-primary" />
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">Create New Form</h3>
-                        <p className="text-sm text-muted-foreground">Start building your next form</p>
+                        <h3 className="text-lg font-semibold mb-2">
+                          Create New Form
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          Start building your next form
+                        </p>
                       </div>
                     </div>
                   </Link>
@@ -172,5 +214,5 @@ export default function DashboardPage() {
         />
       )}
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { useState, useCallback, useSyncExternalStore } from "react"
+import { useState, useCallback, useSyncExternalStore, useRef } from "react"
 import { LocalDataService, type Form } from "@/lib/local-data-service"
 
 // Custom event for form data changes
@@ -10,16 +10,32 @@ function dispatchFormsUpdate() {
 
 // Forms List Hook
 export function useFormsList() {
+  const cacheRef = useRef<ReturnType<typeof LocalDataService.getAllFormsMetadata> | null>(null)
+
   const subscribe = useCallback((onStoreChange: () => void) => {
     const handler = () => onStoreChange()
     window.addEventListener(FORMS_UPDATED_EVENT, handler)
     return () => window.removeEventListener(FORMS_UPDATED_EVENT, handler)
   }, [])
 
+  const getSnapshot = useCallback(() => {
+    const next = LocalDataService.getAllFormsMetadata()
+    const prev = cacheRef.current
+    if (
+      prev &&
+      prev.length === next.length &&
+      prev.every((item, idx) => item === next[idx])
+    ) {
+      return prev
+    }
+    cacheRef.current = next
+    return next
+  }, [])
+
   const data = useSyncExternalStore(
     subscribe,
-    () => LocalDataService.getAllFormsMetadata(),
-    () => LocalDataService.getAllFormsMetadata()
+    getSnapshot,
+    getSnapshot
   )
 
   const isLoading = false
