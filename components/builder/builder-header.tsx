@@ -74,8 +74,9 @@ export const BuilderHeader = memo(function BuilderHeader({
     try {
       if (isNewForm) {
         const result = await createFormMutation.mutate(formDataToSave);
+        console.log("Created form:", result);
         toast.success("Form created");
-        router.push(`/builder/${result.id}`);
+        router.push(`/builder/${result.formId}`);
       } else {
         await updateFormMutation.mutate({ id: formId, ...formDataToSave });
         toast.success("Form saved successfully");
@@ -180,8 +181,7 @@ export const BuilderHeader = memo(function BuilderHeader({
             Preview
           </Button>
           <Button
-            onClick={saveForm}
-          
+            onClick={saveForm}    
             disabled={isSaving}
           >
             <Save className="w-4 h-4 mr-2" />

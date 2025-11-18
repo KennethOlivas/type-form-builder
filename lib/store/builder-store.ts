@@ -19,7 +19,6 @@ interface BuilderState {
   leftPanelCollapsed: boolean;
   rightPanelCollapsed: boolean;
   isInitialized: boolean;
-
   setFormTitle: (title: string) => void;
   setFormDescription: (description: string) => void;
   setQuestions: (questions: Question[]) => void;
@@ -38,7 +37,6 @@ interface BuilderState {
     style?: FormStyle;
     welcomeScreen?: WelcomeScreen;
   }) => void;
-
   updateQuestion: (id: string, updates: Partial<Question>) => void;
   addQuestion: (question: Question) => void;
   deleteQuestion: (id: string) => void;

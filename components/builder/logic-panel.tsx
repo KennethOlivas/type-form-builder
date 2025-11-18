@@ -43,7 +43,7 @@ export const LogicPanel = memo(function LogicPanel() {
 
   const addRule = () => {
     const newRule: LogicRule = {
-      id: `rule-${Date.now()}`,
+      id: crypto.randomUUID(),
       operator: getDefaultOperator(question.type),
       destinationType: "next-question",
     };
@@ -155,7 +155,7 @@ export const LogicPanel = memo(function LogicPanel() {
                   <GitBranch className="w-8 h-8 mx-auto mb-2 opacity-30" />
                   <p className="text-sm">No rules defined</p>
                   <p className="text-xs mt-1">
-                    Click "Add Rule" to create conditional logic
+                    Click &quot;Add Rule&quot; to create conditional logic
                   </p>
                 </div>
               )}

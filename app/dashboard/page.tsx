@@ -110,7 +110,7 @@ export default function DashboardPage() {
                             Responses
                           </span>
                           <span className="font-semibold">
-                            {form.responses}
+                            {/* {form.responses} */} 0
                           </span>
                         </div>
                       </div>
@@ -155,6 +155,7 @@ export default function DashboardPage() {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDuplicate(form.id)}
+                              disabled
                               className="focus:bg-accent"
                             >
                               <Copy className="w-4 h-4 mr-2" />
@@ -162,7 +163,7 @@ export default function DashboardPage() {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(form.id)}
-                              className="text-destructive focus:bg-destructive/10"
+                              variant="destructive"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
                               Delete

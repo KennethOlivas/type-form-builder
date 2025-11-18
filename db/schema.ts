@@ -5,6 +5,7 @@ import {
   boolean,
   integer,
   jsonb,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -68,11 +69,12 @@ export const verification = pgTable("verification", {
 });
 
 export const form = pgTable("form", {
-  id: text("id").primaryKey(),
+  id:  text("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   style: jsonb("style").notNull(),
   welcomeScreen: jsonb("welcome_screen"),
+  createdBy: text("created_by").notNull().references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -81,7 +83,7 @@ export const form = pgTable("form", {
 });
 
 export const question = pgTable("question", {
-  id: text("id").primaryKey(),
+  id:  text("id").primaryKey(),
   formId: text("form_id")
     .notNull()
     .references(() => form.id, { onDelete: "cascade" }),
@@ -134,7 +136,7 @@ export const logicRule = pgTable("logic_rule", {
 });
 
 export const submission = pgTable("submission", {
-  id: text("id").primaryKey(),
+  id:  text("id").primaryKey(),
   formId: text("form_id")
     .notNull()
     .references(() => form.id, { onDelete: "cascade" }),

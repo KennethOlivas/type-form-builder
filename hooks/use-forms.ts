@@ -1,4 +1,4 @@
-import { useState, useCallback, useSyncExternalStore, useRef } from "react";
+import { useState, useCallback, useSyncExternalStore } from "react";
 import { LocalDataService, type Form } from "@/lib/local-data-service";
 
 // Custom event for form data changes
@@ -10,78 +10,112 @@ function dispatchFormsUpdate() {
 
 // Forms List Hook
 export function useFormsList() {
-  const cacheRef = useRef<ReturnType<
-    typeof LocalDataService.getAllFormsMetadata
-  > | null>(null);
+  const [data, setData] = useState<Form[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  const subscribe = useCallback((onStoreChange: () => void) => {
-    const handler = () => onStoreChange();
-    window.addEventListener(FORMS_UPDATED_EVENT, handler);
-    return () => window.removeEventListener(FORMS_UPDATED_EVENT, handler);
-  }, []);
-
-  const getSnapshot = useCallback(() => {
-    const next = LocalDataService.getAllFormsMetadata();
-    const prev = cacheRef.current;
-    if (
-      prev &&
-      prev.length === next.length &&
-      prev.every((item, idx) => item === next[idx])
-    ) {
-      return prev;
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/form", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch forms");
+      }
+      const forms = await res.json();
+      console.log("Fetched forms:", forms);
+      setData(forms.forms);
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setIsLoading(false);
     }
-    cacheRef.current = next;
-    return next;
   }, []);
 
-  const data = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  useSyncExternalStore(
+    useCallback(
+      (onStoreChange) => {
+        fetchData().then(onStoreChange);
+        const handler = () => {
+          fetchData().then(onStoreChange);
+        };
+        window.addEventListener(FORMS_UPDATED_EVENT, handler);
+        return () => window.removeEventListener(FORMS_UPDATED_EVENT, handler);
+      },
+      [fetchData],
+    ),
+    () => data,
+    () => data,
+  );
 
-  const isLoading = false;
   const refetch = useCallback(() => {
-    // Trigger a re-read of the snapshot by dispatching the update event
-    dispatchFormsUpdate();
-  }, []);
+    fetchData();
+  }, [fetchData]);
 
-  return { data, isLoading, refetch };
+  return { data, isLoading, error, refetch };
 }
 
 // Single Form Hook
 export function useFormData(formId: string) {
-  const subscribe = useCallback(
-    (onStoreChange: () => void) => {
-      const handler = (e: Event) => {
-        const customEvent = e as CustomEvent;
-        if (!customEvent.detail || customEvent.detail === formId) {
-          onStoreChange();
-        }
-      };
-      window.addEventListener(FORMS_UPDATED_EVENT, handler);
-      return () => window.removeEventListener(FORMS_UPDATED_EVENT, handler);
-    },
-    [formId],
-  );
+  const [data, setData] = useState<Form | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  const data = useSyncExternalStore<Form | null>(
-    subscribe,
-    () => {
-      if (!formId || formId === "new") return null;
-      return LocalDataService.getForm(formId);
-    },
-    () => {
-      if (!formId || formId === "new") return null;
-      return LocalDataService.getForm(formId);
-    },
-  );
+  const fetchData = useCallback(async () => {
+    if (!formId || formId === "new") {
+      setIsLoading(false);
+      return;
+    }
 
-  const isLoading = false;
-  const refetch = useCallback(() => {
-    // Trigger a re-read of the snapshot by dispatching a targeted update
-    window.dispatchEvent(
-      new CustomEvent(FORMS_UPDATED_EVENT, { detail: formId }),
-    );
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/form/${formId}`, {
+        method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch form");
+      }
+      const formData = await res.json();
+      setData(formData);
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [formId]);
 
-  return { data, isLoading, refetch };
+  // Initial fetch
+  useSyncExternalStore(
+    useCallback(
+      (onStoreChange) => {
+        fetchData().then(onStoreChange);
+        const handler = (e: Event) => {
+          const customEvent = e as CustomEvent;
+          if (!customEvent.detail || customEvent.detail === formId) {
+            fetchData().then(onStoreChange);
+          }
+        };
+        window.addEventListener(FORMS_UPDATED_EVENT, handler);
+        return () => window.removeEventListener(FORMS_UPDATED_EVENT, handler);
+      },
+      [fetchData, formId],
+    ),
+    () => data,
+    () => data,
+  );
+
+  const refetch = useCallback(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { data, isLoading, error, refetch };
 }
 
 // Create Form Action
@@ -92,10 +126,17 @@ export function useCreateForm() {
     async (form: Omit<Form, "id" | "createdAt" | "updatedAt">) => {
       setIsLoading(true);
       try {
-        const newForm = LocalDataService.createForm(form);
+        // const newForm = LocalDataService.createForm(form);
+        const res = await fetch("/api/form", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ formData: form }),
+        });
         dispatchFormsUpdate();
         setIsLoading(false);
-        return newForm;
+        return res.json();
       } catch (error) {
         setIsLoading(false);
         throw error;
@@ -140,7 +181,12 @@ export function useDeleteForm() {
   const mutate = useCallback(async (formId: string) => {
     setIsLoading(true);
     try {
-      LocalDataService.deleteForm(formId);
+      await fetch(`/api/form/${formId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       dispatchFormsUpdate();
       setIsLoading(false);
     } catch (error) {
