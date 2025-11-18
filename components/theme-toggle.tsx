@@ -4,7 +4,12 @@ import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function ThemeToggle() {
+
+interface ThemeToggleProps {
+  variant?:  "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+}
+
+export function ThemeToggle({ variant }: ThemeToggleProps) {
   const [theme, setTheme] = React.useState<"light" | "dark">("dark");
   const [mounted, setMounted] = React.useState(false);
 
@@ -38,7 +43,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" className="hover:bg-accent">
+      <Button variant="ghost" >
         <div className="h-5 w-5" />
         <span className="sr-only">Toggle theme</span>
       </Button>
@@ -47,10 +52,8 @@ export function ThemeToggle() {
 
   return (
     <Button
-      variant="ghost"
-      size="icon"
+      variant={variant}
       onClick={toggleTheme}
-      className="hover:bg-accent"
     >
       <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
       <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />

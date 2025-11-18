@@ -1,4 +1,11 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  integer,
+  jsonb,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -60,9 +67,96 @@ export const verification = pgTable("verification", {
     .notNull(),
 });
 
+export const form = pgTable("form", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  style: jsonb("style").notNull(),
+  welcomeScreen: jsonb("welcome_screen"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const question = pgTable("question", {
+  id: text("id").primaryKey(),
+  formId: text("form_id")
+    .notNull()
+    .references(() => form.id, { onDelete: "cascade" }),
+  type: text("type").notNull(),
+  label: text("label").notNull(),
+  description: text("description"),
+  placeholder: text("placeholder"),
+  required: boolean("required").notNull().default(true),
+  options: jsonb("options"),
+  allowMultiple: boolean("allow_multiple").default(false),
+  ratingScale: integer("rating_scale"),
+  position: integer("position").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const logicJump = pgTable("logic_jump", {
+  id: text("id").primaryKey(),
+  questionId: text("question_id")
+    .notNull()
+    .references(() => question.id, { onDelete: "cascade" }),
+  enabled: boolean("enabled").notNull().default(false),
+  defaultDestinationType: text("default_destination_type").notNull(),
+  defaultDestinationQuestionId: text("default_destination_question_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const logicRule = pgTable("logic_rule", {
+  id: text("id").primaryKey(),
+  logicJumpId: text("logic_jump_id")
+    .notNull()
+    .references(() => logicJump.id, { onDelete: "cascade" }),
+  operator: text("operator").notNull(),
+  value: text("value"),
+  valueMax: text("value_max"),
+  destinationType: text("destination_type").notNull(),
+  destinationQuestionId: text("destination_question_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const submission = pgTable("submission", {
+  id: text("id").primaryKey(),
+  formId: text("form_id")
+    .notNull()
+    .references(() => form.id, { onDelete: "cascade" }),
+  answers: jsonb("answers").notNull(),
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
+  device: text("device").notNull(),
+  location: text("location"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
 export const schema = {
   user,
   session,
   account,
   verification,
+  form,
+  question,
+  logicJump,
+  logicRule,
+  submission,
 };
