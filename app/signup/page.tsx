@@ -1,43 +1,108 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { useForm, ControllerRenderProps } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { signUp } from "@/server/users";
+import { toast } from "sonner";
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.email("Invalid email address"),
+  confirmPassword: z.string().min(8, "Password must be at least 8 characters"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 type SignupValues = z.infer<typeof signupSchema>;
 
+function TextField(props: {
+  form: ReturnType<typeof useForm<SignupValues>>;
+  name: keyof SignupValues;
+  label: string;
+  type?: string;
+  placeholder?: string;
+}) {
+  const { form, name, label, type = "text", placeholder } = props;
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({
+        field,
+      }: {
+        field: ControllerRenderProps<SignupValues, typeof name>;
+      }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <Input
+              id={name}
+              type={type}
+              placeholder={placeholder}
+              className="mt-2 min-h-12"
+              {...field}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
 export default function SignupPage() {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupValues>({
+  const form = useForm<SignupValues>({
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit = async (data: SignupValues) => {
-    await new Promise((r) => setTimeout(r, 1000));
-    router.push("/dashboard");
+  const onSubmit = async (values: SignupValues) => {
+    const { email, name, password } = values;
+    // check if passwords match
+    // if (values.password !== values.confirmPassword) {
+    //   form.setError("confirmPassword", {
+    //     type: "manual",
+    //     message: "Passwords do not match",
+    //   });
+    //   return;
+    // }
+
+    try {
+      const res = await signUp(name, email, password);
+      if (res.user) {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      toast.error(
+        "Failed to sign up. Please try again." +
+          (error instanceof Error ? ` ${error.message}` : ""),
+      );
+    }
+
+    // router.push("/dashboard");
   };
+
+  const isLoading = form.formState.isSubmitting;
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
@@ -48,70 +113,47 @@ export default function SignupPage() {
               Create your FormFlow account
             </p>
           </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div>
-              <Label htmlFor="name" className="text-gray-300">
-                Full Name
-              </Label>
-              <Input
-                id="name"
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <TextField
+                form={form}
+                name="name"
+                label="Name"
                 type="text"
-                placeholder="John Doe"
-                {...register("name")}
-                className="mt-2 bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500 min-h-12"
+                placeholder="Your name"
               />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.name.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="email" className="text-gray-300">
-                Email
-              </Label>
-              <Input
-                id="email"
-                type="email"
+              <TextField
+                form={form}
+                name="email"
+                label="Email"
                 placeholder="you@example.com"
-                {...register("email")}
-                className="mt-2 placeholder:text-gray-500 min-h-12"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
 
-            <div>
-              <Label htmlFor="password" className="text-gray-300">
-                Password
-              </Label>
-              <Input
-                id="password"
+              <TextField
+                form={form}
+                name="password"
+                label="Password"
                 type="password"
-                placeholder="••••••••"
-                {...register("password")}
-                className="mt-2 placeholder:text-gray-500 min-h-12"
+                placeholder="Create a password"
               />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
 
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 min-h-12"
-            >
-              {isSubmitting ? "Creating account..." : "Create account"}
-            </Button>
-          </form>
+              <TextField
+                form={form}
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                placeholder="Confirm your password"
+              />
+
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 min-h-12"
+              >
+                {isLoading ? "Creating account..." : "Create account"}
+              </Button>
+            </form>
+          </Form>
 
           <div className="mt-6 pt-6 border-t border-border text-center">
             <Link

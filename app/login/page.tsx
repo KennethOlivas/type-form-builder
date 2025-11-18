@@ -17,9 +17,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { signIn } from "@/server/users";
+import { toast } from "sonner";
 
 const formSchema = z.object({
-  email: z.string().email("Enter a valid email address"),
+  email: z.email("Enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -69,9 +71,18 @@ export default function LoginPage() {
     mode: "onSubmit",
   });
 
-  const onSubmit = async (_values: FormValues) => {
-    await new Promise((r) => setTimeout(r, 1000));
-    router.push("/dashboard");
+  const onSubmit = async (values: FormValues) => {
+    try {
+      const res = await signIn(values.email, values.password);
+      if (res.user) {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      toast.error(
+        "Failed to sign in. Please check your credentials." +
+          (error instanceof Error ? ` ${error.message}` : ""),
+      );
+    }
   };
 
   const isLoading = form.formState.isSubmitting;
@@ -91,7 +102,6 @@ export default function LoginPage() {
               Sign in to continue to FormFlow
             </p>
           </div>
-
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <TextField
