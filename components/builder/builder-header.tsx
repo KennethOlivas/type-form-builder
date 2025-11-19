@@ -109,12 +109,12 @@ export const BuilderHeader = memo(function BuilderHeader({
               onChange={(e) => setFormTitle(e.target.value)}
               onBlur={() => setEditingTitle(false)}
               onKeyDown={(e) => e.key === "Enter" && setEditingTitle(false)}
-              className="text-xl font-bold  text-primary max-w-md"
+              className="text-xl font-bold max-w-md"
               autoFocus
             />
           ) : (
             <h1
-              className="text-xl lg:text-2xl font-bold text-primary cursor-pointer hover:text-indigo-400 transition-colors truncate"
+              className="text-xl lg:text-2xl font-bold cursor-pointer transition-colors truncate"
               onClick={() => setEditingTitle(true)}
             >
               {formTitle}
