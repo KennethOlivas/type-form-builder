@@ -72,7 +72,7 @@ export const RightPanel = memo(function RightPanel() {
     <div
       ref={panelRef}
       style={{ width: `${rightPanelWidth}px` }}
-      className="hidden lg:flex flex-col border-l border-white/10 bg-white/5 backdrop-blur-xl relative"
+      className="hidden lg:flex flex-col border-l border bg-background backdrop-blur-xl relative"
     >
       <div
         className="absolute left-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-indigo-500 transition-colors z-50"

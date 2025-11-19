@@ -53,8 +53,8 @@ export function SettingsPanel() {
   }
 
   return (
-    <ScrollArea className="h-full">
-      <div className="space-y-6 p-6">
+    <ScrollArea className="h-[80vh]">
+      <div className="space-y-6 p-6 h-[80vh]">
         <div className="pb-4 border-b border-gray-800">
           <h3 className="text-sm font-semibold text-gray-400 uppercase mb-1">
             Question Settings
