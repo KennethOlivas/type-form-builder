@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useState, useRef, useEffect } from "react";
-import { Settings, Home, GitBranch } from "lucide-react";
+import { Settings, GitBranch } from "lucide-react";
 import { useBuilderStore } from "@/lib/store/builder-store";
 import { SettingsPanel } from "./settings-panel";
 
