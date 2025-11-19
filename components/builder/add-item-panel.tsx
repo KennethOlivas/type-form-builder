@@ -50,7 +50,7 @@ export function AddItemPanel({ isMobile = false }: AddItemPanelProps) {
     const newQuestion: Question = {
       id: crypto.randomUUID(),
       type,
-      label: "New Question",
+      label: type.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
       placeholder: "",
       required: false,
       ...(type === "multiple-choice" || type === "dropdown"
