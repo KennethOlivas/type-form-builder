@@ -176,7 +176,6 @@ export function QuestionCard({
                     e.stopPropagation();
                     onDelete();
                   }}
-                 
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>

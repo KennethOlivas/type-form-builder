@@ -6,7 +6,7 @@ import { form, question } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const DELETE = async (request: NextRequest) => {
-   const user = await auth.api.getSession(request);
+  const user = await auth.api.getSession(request);
 
   if (!user?.session) {
     return new Response("Unauthorized", { status: 401 });
@@ -44,9 +44,8 @@ export const PUT = async (request: NextRequest) => {
     .where(eq(form.id, formData.id));
 
   // For simplicity, delete existing questions and re-insert
-    return NextResponse.json({ message: "Form updated successfully" })
+  return NextResponse.json({ message: "Form updated successfully" });
 };
-
 
 export const GET = async (request: NextRequest) => {
   const user = await auth.api.getSession(request);

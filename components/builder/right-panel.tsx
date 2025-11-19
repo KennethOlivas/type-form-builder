@@ -9,12 +9,8 @@ import { LogicPanel } from "./logic-panel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 export const RightPanel = memo(function RightPanel() {
-  const {
-    rightPanelWidth,
-    selectedQuestion,
-    questions,
-    setRightPanelWidth,
-  } = useBuilderStore();
+  const { rightPanelWidth, selectedQuestion, questions, setRightPanelWidth } =
+    useBuilderStore();
   const [isResizing, setIsResizing] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -92,13 +88,15 @@ export const RightPanel = memo(function RightPanel() {
 
       <div className="shrink-0">
         <Tabs defaultValue="settings">
-          <TabsList className="w-full mt-2" >
+          <TabsList className="w-full mt-2">
             <TabsTrigger value="settings">
               <Settings className="w-4 h-4" />
-              Settings</TabsTrigger>
+              Settings
+            </TabsTrigger>
             <TabsTrigger value="logic">
               <GitBranch className="w-4 h-4" />
-              Logic</TabsTrigger>
+              Logic
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="settings">
             <SettingsPanel />
@@ -111,4 +109,3 @@ export const RightPanel = memo(function RightPanel() {
     </div>
   );
 });
-

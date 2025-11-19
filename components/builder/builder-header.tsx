@@ -84,7 +84,7 @@ export const BuilderHeader = memo(function BuilderHeader({
     } catch (error) {
       toast.error(
         "An error occurred while saving the form" +
-          (error instanceof Error ? `: ${error.message}` : "")
+          (error instanceof Error ? `: ${error.message}` : ""),
       );
     }
   };

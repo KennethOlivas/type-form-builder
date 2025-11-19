@@ -75,9 +75,9 @@ export function useFormData(formId: string) {
     try {
       const res = await fetch(`/api/form/${formId}`, {
         method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
       if (!res.ok) {
         throw new Error("Failed to fetch form");

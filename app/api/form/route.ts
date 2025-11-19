@@ -5,7 +5,6 @@ import { form, question } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 
-
 export const POST = async (request: NextRequest) => {
   const user = await auth.api.getSession(request);
 
@@ -13,7 +12,7 @@ export const POST = async (request: NextRequest) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const userId = user.user.id
+  const userId = user.user.id;
 
   const { formData } = (await request.json()) as { formData: Form };
   // Here you would typically handle form creation logic, e.g., saving to a database
@@ -41,7 +40,7 @@ export const POST = async (request: NextRequest) => {
         label: q.label,
         description: q.description || null,
         placeholder: q.placeholder || null,
-      }))
+      })),
     )
     .returning();
 
@@ -57,12 +56,10 @@ export const GET = async (request: NextRequest) => {
 
   const userId = userData.user.id;
 
-
   const response = await db
     .select()
     .from(form)
     .where(eq(form.createdBy, userId));
 
   return NextResponse.json({ forms: response });
-}
-
+};

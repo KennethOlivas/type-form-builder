@@ -28,8 +28,6 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ProfileMenu } from "@/components/profile-menu";
 
 export default function DashboardPage() {
-
-
   const { data: forms = [], isLoading } = useFormsList();
   const deleteFormMutation = useDeleteForm();
   const duplicateFormMutation = useDuplicateForm();

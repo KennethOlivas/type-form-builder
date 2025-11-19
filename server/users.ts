@@ -26,4 +26,4 @@ export const signOut = async () => {
   return await auth.api.signOut({
     headers: await headers(),
   });
-}
+};

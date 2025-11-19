@@ -17,10 +17,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
     <div className="space-y-6 p-4">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label
-            htmlFor="welcome-enabled"
-            className="text-sm font-medium "
-          >
+          <Label htmlFor="welcome-enabled" className="text-sm font-medium ">
             Enable Welcome Screen
           </Label>
           <Switch
@@ -50,16 +47,12 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                     title: e.target.value,
                   })
                 }
-              
                 placeholder="Welcome to our survey"
               />
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="welcome-description"
-                className="text-sm "
-              >
+              <Label htmlFor="welcome-description" className="text-sm ">
                 Description
               </Label>
               <Textarea
@@ -90,7 +83,6 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                     buttonText: e.target.value,
                   })
                 }
-              
                 placeholder="Start"
               />
             </div>
@@ -112,7 +104,6 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
               >
                 <ToggleGroupItem
                   value="left"
-                  
                   aria-label="Align left"
                   className="data-[state=on]:bg-primary"
                 >
@@ -136,10 +127,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="background-image"
-                className="text-sm "
-              >
+              <Label htmlFor="background-image" className="text-sm ">
                 Background Image URL
               </Label>
               <Input
@@ -151,7 +139,6 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                     backgroundImage: e.target.value,
                   })
                 }
-              
                 placeholder="https://example.com/image.jpg"
               />
             </div>
@@ -209,10 +196,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
 
             {welcomeScreen.showTimeEstimate && (
               <div className="space-y-2">
-                <Label
-                  htmlFor="time-estimate"
-                  className="text-sm "
-                >
+                <Label htmlFor="time-estimate" className="text-sm ">
                   Time Estimate
                 </Label>
                 <Input
@@ -224,7 +208,6 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                       timeEstimate: e.target.value,
                     })
                   }
-                
                   placeholder="Takes 3 minutes"
                 />
               </div>

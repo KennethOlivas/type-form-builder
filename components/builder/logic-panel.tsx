@@ -118,9 +118,7 @@ export const LogicPanel = memo(function LogicPanel() {
         <div>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <Label className="text-sm font-semibold ">
-                Logic Jumps
-              </Label>
+              <Label className="text-sm font-semibold ">Logic Jumps</Label>
               <p className="text-xs  mt-1">
                 Branch to different questions based on answers
               </p>
@@ -136,9 +134,7 @@ export const LogicPanel = memo(function LogicPanel() {
           <>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-xs font-medium  uppercase">
-                  Rules
-                </Label>
+                <Label className="text-xs font-medium  uppercase">Rules</Label>
                 <Button
                   onClick={addRule}
                   size="sm"
@@ -180,7 +176,9 @@ export const LogicPanel = memo(function LogicPanel() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-xs text-accent-foreground">If answer</Label>
+                    <Label className="text-xs text-accent-foreground">
+                      If answer
+                    </Label>
                     <Select
                       value={rule.operator}
                       onValueChange={(value) =>
@@ -194,11 +192,7 @@ export const LogicPanel = memo(function LogicPanel() {
                       </SelectTrigger>
                       <SelectContent>
                         {getOperatorOptions(question.type).map((op) => (
-                          <SelectItem
-                            key={op.value}
-                            value={op.value}
-                          
-                          >
+                          <SelectItem key={op.value} value={op.value}>
                             {op.label}
                           </SelectItem>
                         ))}
@@ -270,9 +264,7 @@ export const LogicPanel = memo(function LogicPanel() {
                           />
                           {rule.operator === "between" && (
                             <>
-                              <Label className="text-xs ">
-                                Maximum Value
-                              </Label>
+                              <Label className="text-xs ">Maximum Value</Label>
                               <Input
                                 value={rule.valueMax}
                                 onChange={(e) =>
@@ -292,9 +284,7 @@ export const LogicPanel = memo(function LogicPanel() {
                   )}
 
                   <div className="space-y-2">
-                    <Label className="text-xs ">
-                      Then jump to
-                    </Label>
+                    <Label className="text-xs ">Then jump to</Label>
                     <Select
                       value={rule.destinationType}
                       onValueChange={(value) =>
@@ -308,16 +298,10 @@ export const LogicPanel = memo(function LogicPanel() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="">
-                        <SelectItem
-                          value="next-question"
-                          className=""
-                        >
+                        <SelectItem value="next-question" className="">
                           Next Question
                         </SelectItem>
-                        <SelectItem
-                          value="specific-question"
-                          className=""
-                        >
+                        <SelectItem value="specific-question" className="">
                           Specific Question
                         </SelectItem>
                         <SelectItem value="end-form" className="">
@@ -329,9 +313,7 @@ export const LogicPanel = memo(function LogicPanel() {
 
                   {rule.destinationType === "specific-question" && (
                     <div className="space-y-2">
-                      <Label className="text-xs ">
-                        Select Question
-                      </Label>
+                      <Label className="text-xs ">Select Question</Label>
                       <Select
                         value={rule.destinationQuestionId}
                         onValueChange={(value) =>
@@ -343,11 +325,7 @@ export const LogicPanel = memo(function LogicPanel() {
                         </SelectTrigger>
                         <SelectContent className="">
                           {availableDestinations.map((q) => (
-                            <SelectItem
-                              key={q.id}
-                              value={q.id}
-                              className=""
-                            >
+                            <SelectItem key={q.id} value={q.id} className="">
                               {q.label}
                             </SelectItem>
                           ))}
@@ -384,10 +362,7 @@ export const LogicPanel = memo(function LogicPanel() {
                       <SelectItem value="next-question" className="">
                         Next Question
                       </SelectItem>
-                      <SelectItem
-                        value="specific-question"
-                        className=""
-                      >
+                      <SelectItem value="specific-question" className="">
                         Specific Question
                       </SelectItem>
                       <SelectItem value="end-form" className="">
@@ -399,9 +374,7 @@ export const LogicPanel = memo(function LogicPanel() {
 
                 {logic.defaultDestinationType === "specific-question" && (
                   <div className="space-y-2">
-                    <Label className="text-xs ">
-                      Select Question
-                    </Label>
+                    <Label className="text-xs ">Select Question</Label>
                     <Select
                       value={logic.defaultDestinationQuestionId}
                       onValueChange={(value) =>
@@ -413,11 +386,7 @@ export const LogicPanel = memo(function LogicPanel() {
                       </SelectTrigger>
                       <SelectContent className="">
                         {availableDestinations.map((q) => (
-                          <SelectItem
-                            key={q.id}
-                            value={q.id}
-                            className=""
-                          >
+                          <SelectItem key={q.id} value={q.id} className="">
                             {q.label}
                           </SelectItem>
                         ))}
