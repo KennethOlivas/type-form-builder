@@ -156,13 +156,22 @@ export function useUpdateForm() {
     async ({ id, ...updates }: { id: string } & Partial<Form>) => {
       setIsLoading(true);
       try {
-        const updatedForm = LocalDataService.updateForm(id, updates);
+        const res = await fetch(`/api/form/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ formData: updates }),
+        });
+        if (!res.ok) {
+          throw new Error("Failed to update form");
+        }
         dispatchFormsUpdate();
         window.dispatchEvent(
           new CustomEvent(FORMS_UPDATED_EVENT, { detail: id }),
         );
         setIsLoading(false);
-        return updatedForm;
+        return await res.json();
       } catch (error) {
         setIsLoading(false);
         throw error;

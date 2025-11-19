@@ -25,8 +25,11 @@ import {
 import { ShareFormModal } from "@/components/share-form-modal";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ProfileMenu } from "@/components/profile-menu";
 
 export default function DashboardPage() {
+
+
   const { data: forms = [], isLoading } = useFormsList();
   const deleteFormMutation = useDeleteForm();
   const duplicateFormMutation = useDuplicateForm();
@@ -64,6 +67,7 @@ export default function DashboardPage() {
                 New Form
               </Button>
             </Link>
+            <ProfileMenu />
           </nav>
         </div>
       </header>
