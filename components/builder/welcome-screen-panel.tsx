@@ -19,7 +19,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
         <div className="flex items-center justify-between">
           <Label
             htmlFor="welcome-enabled"
-            className="text-sm font-medium text-white"
+            className="text-sm font-medium "
           >
             Enable Welcome Screen
           </Label>
@@ -38,7 +38,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
         {welcomeScreen.enabled && (
           <>
             <div className="space-y-2">
-              <Label htmlFor="welcome-title" className="text-sm text-gray-300">
+              <Label htmlFor="welcome-title" className="text-sm ">
                 Title
               </Label>
               <Input
@@ -50,7 +50,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                     title: e.target.value,
                   })
                 }
-                className="bg-gray-800/50 border-gray-700 text-white"
+              
                 placeholder="Welcome to our survey"
               />
             </div>
@@ -58,7 +58,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
             <div className="space-y-2">
               <Label
                 htmlFor="welcome-description"
-                className="text-sm text-gray-300"
+                className="text-sm "
               >
                 Description
               </Label>
@@ -71,14 +71,14 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                     description: e.target.value,
                   })
                 }
-                className="bg-gray-800/50 border-gray-700 text-white resize-none"
+                className="  resize-none"
                 placeholder="Thank you for taking the time..."
                 rows={4}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="welcome-button" className="text-sm text-gray-300">
+              <Label htmlFor="welcome-button" className="text-sm ">
                 Button Text
               </Label>
               <Input
@@ -90,13 +90,13 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                     buttonText: e.target.value,
                   })
                 }
-                className="bg-gray-800/50 border-gray-700 text-white"
+              
                 placeholder="Start"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-gray-300">Content Alignment</Label>
+              <Label className="text-sm ">Content Alignment</Label>
               <ToggleGroup
                 type="single"
                 value={welcomeScreen.contentAlignment}
@@ -112,22 +112,23 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
               >
                 <ToggleGroupItem
                   value="left"
+                  
                   aria-label="Align left"
-                  className="data-[state=on]:bg-indigo-600"
+                  className="data-[state=on]:bg-primary"
                 >
                   <AlignLeft className="h-4 w-4" />
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="center"
                   aria-label="Align center"
-                  className="data-[state=on]:bg-indigo-600"
+                  className="data-[state=on]:bg-primary"
                 >
                   <AlignCenter className="h-4 w-4" />
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="right"
                   aria-label="Align right"
-                  className="data-[state=on]:bg-indigo-600"
+                  className="data-[state=on]:bg-primary"
                 >
                   <AlignRight className="h-4 w-4" />
                 </ToggleGroupItem>
@@ -137,7 +138,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
             <div className="space-y-2">
               <Label
                 htmlFor="background-image"
-                className="text-sm text-gray-300"
+                className="text-sm "
               >
                 Background Image URL
               </Label>
@@ -150,13 +151,13 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                     backgroundImage: e.target.value,
                   })
                 }
-                className="bg-gray-800/50 border-gray-700 text-white"
+              
                 placeholder="https://example.com/image.jpg"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-gray-300">
+              <Label className="text-sm ">
                 Background Opacity: {welcomeScreen.backgroundOpacity}%
               </Label>
               <Slider
@@ -175,7 +176,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
             </div>
 
             <div className="flex items-center justify-between">
-              <Label htmlFor="split-screen" className="text-sm text-gray-300">
+              <Label htmlFor="split-screen" className="text-sm ">
                 Split Screen Layout
               </Label>
               <Switch
@@ -191,7 +192,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
             </div>
 
             <div className="flex items-center justify-between">
-              <Label htmlFor="show-time" className="text-sm text-gray-300">
+              <Label htmlFor="show-time" className="text-sm ">
                 Show Time Estimate
               </Label>
               <Switch
@@ -210,7 +211,7 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
               <div className="space-y-2">
                 <Label
                   htmlFor="time-estimate"
-                  className="text-sm text-gray-300"
+                  className="text-sm "
                 >
                   Time Estimate
                 </Label>
@@ -223,14 +224,14 @@ export const WelcomeScreenPanel = memo(function WelcomeScreenPanel() {
                       timeEstimate: e.target.value,
                     })
                   }
-                  className="bg-gray-800/50 border-gray-700 text-white"
+                
                   placeholder="Takes 3 minutes"
                 />
               </div>
             )}
 
             <div className="flex items-center justify-between">
-              <Label htmlFor="show-count" className="text-sm text-gray-300">
+              <Label htmlFor="show-count" className="text-sm ">
                 Show Respondent Counter
               </Label>
               <Switch

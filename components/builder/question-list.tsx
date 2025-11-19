@@ -27,6 +27,7 @@ import { QuestionCard } from "./question-card";
 import { useState } from "react";
 import { useBuilderStore } from "@/lib/store/builder-store";
 import { useUpdateForm } from "@/hooks/use-forms";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface QuestionListProps {
   isNewForm: boolean;
@@ -132,8 +133,8 @@ export const QuestionList = memo(function QuestionList({
   const displayQuestions = activeId ? localQuestions : questions;
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 lg:p-8">
-      <div className="max-w-2xl mx-auto space-y-4">
+    <ScrollArea className="flex-1  ">
+      <div className="max-w-2xl mx-auto space-y-4 mb-2 mt-4">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -187,6 +188,6 @@ export const QuestionList = memo(function QuestionList({
           </DragOverlay>
         </DndContext>
       </div>
-    </div>
+    </ScrollArea>
   );
 });

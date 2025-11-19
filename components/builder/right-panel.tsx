@@ -1,28 +1,18 @@
 "use client";
 
 import { memo, useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Settings,
-  Palette,
-  Home,
-  ChevronLeft,
-  ChevronRight,
-  GitBranch,
-} from "lucide-react";
+import { Settings, Home, GitBranch } from "lucide-react";
 import { useBuilderStore } from "@/lib/store/builder-store";
 import { SettingsPanel } from "./settings-panel";
-import { DesignPanel } from "./design-panel";
-import { WelcomeScreenPanel } from "./welcome-screen-panel";
+
 import { LogicPanel } from "./logic-panel";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 export const RightPanel = memo(function RightPanel() {
   const {
-    rightPanelMode,
     rightPanelWidth,
     selectedQuestion,
     questions,
-    setRightPanelMode,
     setRightPanelWidth,
   } = useBuilderStore();
   const [isResizing, setIsResizing] = useState(false);
@@ -101,45 +91,24 @@ export const RightPanel = memo(function RightPanel() {
       </div>
 
       <div className="shrink-0">
-        <PanelTabs />
-      </div>
-
-      <div className="flex-1 overflow-y-auto">
-        {rightPanelMode === "settings" ? <SettingsPanel /> : <LogicPanel />}
-      </div>
-    </div>
-  );
-});
-
-const PanelTabs = memo(function PanelTabs() {
-  const { rightPanelMode, setRightPanelMode } = useBuilderStore();
-
-  return (
-    <div className="border-b border-gray-800">
-      <div className="flex">
-        <button
-          onClick={() => setRightPanelMode("settings")}
-          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-            rightPanelMode === "settings"
-              ? "text-white bg-gray-800/50 border-b-2 border-indigo-500"
-              : "text-gray-400 hover:text-white hover:bg-gray-800/30"
-          }`}
-        >
-          <Settings className="w-4 h-4 inline mr-2" />
-          Settings
-        </button>
-        <button
-          onClick={() => setRightPanelMode("logic")}
-          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-            rightPanelMode === "logic"
-              ? "text-white bg-gray-800/50 border-b-2 border-indigo-500"
-              : "text-gray-400 hover:text-white hover:bg-gray-800/30"
-          }`}
-        >
-          <GitBranch className="w-4 h-4 inline mr-2" />
-          Logic
-        </button>
+        <Tabs defaultValue="settings">
+          <TabsList className="w-full mt-2" >
+            <TabsTrigger value="settings">
+              <Settings className="w-4 h-4" />
+              Settings</TabsTrigger>
+            <TabsTrigger value="logic">
+              <GitBranch className="w-4 h-4" />
+              Logic</TabsTrigger>
+          </TabsList>
+          <TabsContent value="settings">
+            <SettingsPanel />
+          </TabsContent>
+          <TabsContent value="logic">
+            <LogicPanel />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
 });
+

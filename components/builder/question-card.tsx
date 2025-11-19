@@ -52,7 +52,7 @@ export function QuestionCard({
             {question.options?.slice(0, 3).map((option, i) => (
               <div key={i} className="flex items-center gap-2 min-h-8">
                 <div
-                  className={`w-3 h-3 ${question.allowMultiple ? "rounded" : "rounded-full"} border-2 border-gray-600 shrink-0`}
+                  className={`w-3 h-3 ${question.allowMultiple ? "rounded" : "rounded-full"} border-2 border-foreground shrink-0`}
                 />
                 <span className="text-xs text-gray-400">{option}</span>
               </div>
@@ -67,7 +67,7 @@ export function QuestionCard({
       case "dropdown":
         return (
           <Select disabled>
-            <SelectTrigger className="bg-gray-800/30 border-gray-700 text-gray-500 min-h-10 text-sm">
+            <SelectTrigger className="bg-accent border-gray-700 text-gray-500 min-h-10 text-sm">
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
           </Select>
@@ -97,7 +97,7 @@ export function QuestionCard({
         );
       case "long-text":
         return (
-          <div className="bg-gray-800/30 border border-gray-700 rounded-lg p-2 min-h-16">
+          <div className="bg-accent border  rounded-lg p-2 min-h-16">
             <span className="text-xs text-gray-500">
               {question.placeholder || "Long answer"}
             </span>
@@ -105,7 +105,7 @@ export function QuestionCard({
         );
       default:
         return (
-          <div className="bg-gray-800/30 border border-gray-700 rounded-lg p-2 min-h-10">
+          <div className="bg-accent border  rounded-lg p-2 min-h-10">
             <span className="text-xs text-gray-500">
               {question.placeholder || "Short answer"}
             </span>
@@ -123,9 +123,9 @@ export function QuestionCard({
       style={style}
     >
       <div
-        className={`cursor-pointer transition-all bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl ${
+        className={`cursor-pointer transition-all bg-accent/30 backdrop-blur-xl  rounded-xl shadow  ${
           isSelected
-            ? "ring-2 ring-indigo-500"
+            ? "ring-2 ring-primary"
             : "hover:ring-1 hover:ring-gray-600"
         } ${isCompact ? "p-3" : "p-6"} ${isDragging ? "opacity-50 scale-105 shadow-2xl shadow-indigo-500/20" : ""}`}
         onClick={onSelect}

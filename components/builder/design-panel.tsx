@@ -195,8 +195,8 @@ export function DesignPanel() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="pb-4 border-b border-gray-800">
-        <h3 className="text-sm font-semibold text-gray-400 uppercase mb-1">
+      <div className="pb-4 border-b ">
+        <h3 className="text-sm font-semibold uppercase mb-1">
           Form Appearance
         </h3>
         <p className="text-xs text-gray-600">
@@ -205,19 +205,9 @@ export function DesignPanel() {
       </div>
 
       <Tabs defaultValue="presets" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 bg-gray-800/50">
-          <TabsTrigger
-            value="presets"
-            className="data-[state=active]:bg-gray-700"
-          >
-            Presets
-          </TabsTrigger>
-          <TabsTrigger
-            value="custom"
-            className="data-[state=active]:bg-gray-700"
-          >
-            Custom
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="presets">Presets</TabsTrigger>
+          <TabsTrigger value="custom">Custom</TabsTrigger>
         </TabsList>
 
         <TabsContent value="presets" className="space-y-3 mt-4">
@@ -265,7 +255,7 @@ export function DesignPanel() {
 
         <TabsContent value="custom" className="space-y-6 mt-4">
           <div>
-            <Label className="text-gray-300 mb-2 block">Background Color</Label>
+            <Label className="mb-2 block">Background Color</Label>
             <div className="flex gap-2">
               <input
                 type="color"
@@ -276,7 +266,7 @@ export function DesignPanel() {
                     backgroundColor: e.target.value,
                   })
                 }
-                className="w-12 h-12 rounded-lg border-2 border-gray-700 cursor-pointer"
+                className="w-12 h-12 rounded-lg border-2 cursor-pointer"
               />
               <Input
                 value={formStyle.backgroundColor}
@@ -286,13 +276,13 @@ export function DesignPanel() {
                     backgroundColor: e.target.value,
                   })
                 }
-                className="flex-1 bg-gray-800/50 border-gray-700 text-white font-mono text-sm"
+                className="flex-1 font-mono text-sm"
               />
             </div>
           </div>
 
           <div>
-            <Label className="text-gray-300 mb-2 block">Text Color</Label>
+            <Label className=" mb-2 block">Text Color</Label>
             <div className="flex gap-2">
               <input
                 type="color"
@@ -300,14 +290,14 @@ export function DesignPanel() {
                 onChange={(e) =>
                   setFormStyle({ ...formStyle, textColor: e.target.value })
                 }
-                className="w-12 h-12 rounded-lg border-2 border-gray-700 cursor-pointer"
+                className="w-12 h-12 rounded-lg border-2 cursor-pointer"
               />
               <Input
                 value={formStyle.textColor}
                 onChange={(e) =>
                   setFormStyle({ ...formStyle, textColor: e.target.value })
                 }
-                className="flex-1 bg-gray-800/50 border-gray-700 text-white font-mono text-sm"
+                className="flex-1 font-mono text-sm"
               />
             </div>
             {checkContrast(formStyle.backgroundColor, formStyle.textColor) && (
@@ -318,9 +308,7 @@ export function DesignPanel() {
           </div>
 
           <div>
-            <Label className="text-gray-300 mb-2 block">
-              Button Background
-            </Label>
+            <Label className=" mb-2 block">Button Background</Label>
             <div className="flex gap-2">
               <input
                 type="color"
@@ -328,20 +316,20 @@ export function DesignPanel() {
                 onChange={(e) =>
                   setFormStyle({ ...formStyle, buttonColor: e.target.value })
                 }
-                className="w-12 h-12 rounded-lg border-2 border-gray-700 cursor-pointer"
+                className="w-12 h-12 rounded-lg border-2  cursor-pointer"
               />
               <Input
                 value={formStyle.buttonColor}
                 onChange={(e) =>
                   setFormStyle({ ...formStyle, buttonColor: e.target.value })
                 }
-                className="flex-1 bg-gray-800/50 border-gray-700 text-white font-mono text-sm"
+                className="flex-1   font-mono text-sm"
               />
             </div>
           </div>
 
           <div>
-            <Label className="text-gray-300 mb-2 block">Button Text</Label>
+            <Label className="mb-2 block">Button Text</Label>
             <div className="flex gap-2">
               <input
                 type="color"
@@ -352,7 +340,7 @@ export function DesignPanel() {
                     buttonTextColor: e.target.value,
                   })
                 }
-                className="w-12 h-12 rounded-lg border-2 border-gray-700 cursor-pointer"
+                className="w-12 h-12 rounded-lg border-2  cursor-pointer"
               />
               <Input
                 value={formStyle.buttonTextColor}
@@ -362,30 +350,30 @@ export function DesignPanel() {
                     buttonTextColor: e.target.value,
                   })
                 }
-                className="flex-1 bg-gray-800/50 border-gray-700 text-white font-mono text-sm"
+                className="flex-1  font-mono text-sm"
               />
             </div>
           </div>
 
           <div>
-            <Label className="text-gray-300 mb-2 block">Font Family</Label>
+            <Label className="mb-2 block">Font Family</Label>
             <Select
               value={formStyle.fontFamily}
               onValueChange={(value: "sans" | "serif" | "mono") =>
                 setFormStyle({ ...formStyle, fontFamily: value })
               }
             >
-              <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white">
+              <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-gray-800 border-gray-700">
-                <SelectItem value="sans" className="text-white font-sans">
+              <SelectContent>
+                <SelectItem value="sans" className=" font-sans">
                   Sans Serif
                 </SelectItem>
-                <SelectItem value="serif" className="text-white font-serif">
+                <SelectItem value="serif" className=" font-serif">
                   Serif
                 </SelectItem>
-                <SelectItem value="mono" className="text-white font-mono">
+                <SelectItem value="mono" className=" font-mono">
                   Monospace
                 </SelectItem>
               </SelectContent>
@@ -393,7 +381,7 @@ export function DesignPanel() {
           </div>
 
           <div>
-            <Label className="text-gray-300 mb-3 block">
+            <Label className=" mb-3 block">
               Corner Roundness: {formStyle.borderRadius}px
             </Label>
             <Slider
@@ -406,7 +394,7 @@ export function DesignPanel() {
               step={4}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-600 mt-2">
+            <div className="flex justify-between text-xs  mt-2">
               <span>Sharp</span>
               <span>Soft</span>
               <span>Round</span>

@@ -50,7 +50,7 @@ export function ShareFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-md">
+      <DialogContent className=" max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">Share Form</DialogTitle>
           <DialogDescription className="text-gray-400">
@@ -60,27 +60,16 @@ export function ShareFormModal({
 
         <div className="space-y-6 mt-4">
           {/* QR Code */}
-          <div className="flex justify-center p-6 bg-white rounded-xl">
+          <div className="flex justify-center p-6  rounded-xl">
             <QRCode data={formUrl} size={200} />
           </div>
 
           {/* Form Link */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300">
-              Form Link
-            </label>
+            <label className="text-sm font-medium ">Form Link</label>
             <div className="flex gap-2">
-              <Input
-                value={formUrl}
-                readOnly
-                className="bg-gray-800 border-gray-700 text-white flex-1"
-              />
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleCopy}
-                className="border-gray-700 hover:bg-gray-800"
-              >
+              <Input value={formUrl} readOnly className="  flex-1" />
+              <Button variant="outline" size="icon" onClick={handleCopy}>
                 {copied ? (
                   <Check className="w-4 h-4 text-green-500" />
                 ) : (
@@ -92,18 +81,11 @@ export function ShareFormModal({
 
           {/* Actions */}
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className="flex-1 border-gray-700 text-white hover:bg-gray-800"
-              onClick={handleCopy}
-            >
+            <Button variant="outline" className="flex-1 " onClick={handleCopy}>
               <Copy className="w-4 h-4 mr-2" />
               Copy Link
             </Button>
-            <Button
-              className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white"
-              onClick={handleOpenInNewTab}
-            >
+            <Button className="flex-1  text-white" onClick={handleOpenInNewTab}>
               <ExternalLink className="w-4 h-4 mr-2" />
               Open Form
             </Button>

@@ -63,7 +63,7 @@ export function SettingsPanel() {
         </div>
 
         <div>
-          <Label className="text-gray-300 mb-2 block">Question Type</Label>
+          <Label className=" mb-2 block">Question Type</Label>
           <Select
             value={selectedQuestionData.type}
             onValueChange={(value) =>
@@ -72,16 +72,12 @@ export function SettingsPanel() {
               })
             }
           >
-            <SelectTrigger className="bg-gray-800/50 border-gray-700 text-white min-h-12">
+            <SelectTrigger className="min-h-12 w-full">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-700">
+            <SelectContent>
               {questionTypes.map((type) => (
-                <SelectItem
-                  key={type.value}
-                  value={type.value}
-                  className="text-white"
-                >
+                <SelectItem key={type.value} value={type.value}>
                   {type.label}
                 </SelectItem>
               ))}
@@ -90,27 +86,27 @@ export function SettingsPanel() {
         </div>
 
         <div>
-          <Label className="text-gray-300 mb-2 block">Question Label</Label>
+          <Label className=" mb-2 block">Question Label</Label>
           <Input
             value={selectedQuestionData.label}
             onChange={(e) =>
               updateQuestion(selectedQuestion, { label: e.target.value })
             }
-            className="bg-gray-800/50 border-gray-700 text-white min-h-12"
+            className=" min-h-12"
           />
         </div>
 
         <div>
-          <Label className="text-gray-300 mb-2 block">
+          <Label className=" mb-2 block">
             Description{" "}
-            <span className="text-gray-600 text-xs">(optional)</span>
+            <span className="text-muted-foreground text-xs">(optional)</span>
           </Label>
           <Textarea
             value={selectedQuestionData.description || ""}
             onChange={(e) =>
               updateQuestion(selectedQuestion, { description: e.target.value })
             }
-            className="bg-gray-800/50 border-gray-700 text-white min-h-20"
+            className=" min-h-20"
             placeholder="Add helpful hints for respondents..."
           />
         </div>
@@ -128,21 +124,21 @@ export function SettingsPanel() {
                   placeholder: e.target.value,
                 })
               }
-              className="bg-gray-800/50 border-gray-700 text-white min-h-12"
+              className=" text-white min-h-12"
               placeholder="e.g., Enter your email address"
             />
           </div>
         )}
 
-        <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-gray-800/30 border border-gray-700/50">
+        <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-foreground/10 border border-foreground/20">
           <div>
             <Label
               htmlFor="required"
-              className="text-gray-300 cursor-pointer font-medium"
+              className="text-foreground cursor-pointer font-medium"
             >
               Required field
             </Label>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Users must answer this question
             </p>
           </div>
@@ -157,15 +153,15 @@ export function SettingsPanel() {
 
         {selectedQuestionData.type === "multiple-choice" && (
           <>
-            <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-gray-800/30 border border-gray-700/50">
+            <div className="flex items-center justify-between py-3 px-4 rounded-lg  border ">
               <div>
                 <Label
                   htmlFor="allowMultiple"
-                  className="text-gray-300 cursor-pointer font-medium"
+                  className=" cursor-pointer font-medium"
                 >
                   Allow multiple selections
                 </Label>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs mt-0.5">
                   Enable checkboxes instead of radio buttons
                 </p>
               </div>
@@ -179,29 +175,26 @@ export function SettingsPanel() {
             </div>
 
             <div>
-              <Label className="text-gray-300 mb-3 block">Options</Label>
+              <Label className="mb-3 block">Options</Label>
               <div className="space-y-2">
                 {selectedQuestionData.options?.map((option, index) => (
                   <div key={index} className="flex gap-2">
                     <div className="flex-1 flex items-center gap-2">
-                      <span className="text-xs text-gray-600 w-6">
-                        {index + 1}.
-                      </span>
+                      <span className="text-xs  w-6">{index + 1}.</span>
                       <Input
                         value={option}
                         onChange={(e) =>
                           updateOption(selectedQuestion, index, e.target.value)
                         }
-                        className="bg-gray-800/50 border-gray-700 text-white min-h-10"
+                        className=" text-white min-h-10"
                       />
                     </div>
                     {selectedQuestionData.options &&
                       selectedQuestionData.options.length > 2 && (
                         <Button
-                          variant="ghost"
+                          variant="destructive"
                           size="icon"
                           onClick={() => deleteOption(selectedQuestion, index)}
-                          className="text-red-400 hover:text-red-300 hover:bg-red-950/30"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -213,7 +206,7 @@ export function SettingsPanel() {
                 variant="outline"
                 size="sm"
                 onClick={() => addOption(selectedQuestion)}
-                className="mt-3 w-full border-gray-700 text-gray-300 hover:bg-gray-800"
+                className="mt-3 w-full "
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Option
@@ -225,31 +218,27 @@ export function SettingsPanel() {
         {selectedQuestionData.type === "dropdown" &&
           selectedQuestionData.options && (
             <div>
-              <Label className="text-gray-300 mb-3 block">
-                Dropdown Options
-              </Label>
+              <Label className="mb-3 block">Dropdown Options</Label>
               <div className="space-y-2">
                 {selectedQuestionData.options.map((option, index) => (
                   <div key={index} className="flex gap-2">
                     <div className="flex-1 flex items-center gap-2">
-                      <span className="text-xs text-gray-600 w-6">
-                        {index + 1}.
-                      </span>
+                      <Label className="text-xs w-4">{index + 1}.</Label>
                       <Input
+                        placeholder={`Option ${index + 1}`}
                         value={option}
                         onChange={(e) =>
                           updateOption(selectedQuestion, index, e.target.value)
                         }
-                        className="bg-gray-800/50 border-gray-700 text-white min-h-10"
+                        className=" min-h-10"
                       />
                     </div>
                     {selectedQuestionData.options &&
                       selectedQuestionData.options.length > 2 && (
                         <Button
-                          variant="ghost"
+                          variant="destructive"
                           size="icon"
                           onClick={() => deleteOption(selectedQuestion, index)}
-                          className="text-red-400 hover:text-red-300 hover:bg-red-950/30"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -261,7 +250,7 @@ export function SettingsPanel() {
                 variant="outline"
                 size="sm"
                 onClick={() => addOption(selectedQuestion)}
-                className="mt-3 w-full border-gray-700 text-gray-300 hover:bg-gray-800"
+                className="mt-3 w-full"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Option
@@ -271,7 +260,7 @@ export function SettingsPanel() {
 
         {selectedQuestionData.type === "rating" && (
           <div>
-            <Label className="text-gray-300 mb-3 block">
+            <Label className="mb-3 block">
               Rating Scale: {selectedQuestionData.ratingScale || 5}
             </Label>
             <Slider
@@ -284,7 +273,7 @@ export function SettingsPanel() {
               step={1}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-600 mt-2">
+            <div className="flex justify-between text-xs mt-2">
               <span>3</span>
               <span>5</span>
               <span>10</span>

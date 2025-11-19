@@ -123,10 +123,9 @@ export const BuilderHeader = memo(function BuilderHeader({
         </div>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle variant="outline"/>
+          <ThemeToggle variant="outline" />
           <Button
             variant="outline"
-          
             onClick={() => setShowWelcomeModal(true)}
             className="hidden lg:flex"
           >
@@ -136,7 +135,6 @@ export const BuilderHeader = memo(function BuilderHeader({
 
           <Button
             variant="outline"
-      
             onClick={() => setShowDesignModal(true)}
             className="hidden lg:flex "
           >
@@ -146,7 +144,6 @@ export const BuilderHeader = memo(function BuilderHeader({
 
           <Button
             variant="ghost"
- 
             onClick={() => setShowMobileMenu(true)}
             className="lg:hidden "
           >
@@ -180,10 +177,7 @@ export const BuilderHeader = memo(function BuilderHeader({
             <Eye className="w-4 h-4 mr-2" />
             Preview
           </Button>
-          <Button
-            onClick={saveForm}    
-            disabled={isSaving}
-          >
+          <Button onClick={saveForm} disabled={isSaving}>
             <Save className="w-4 h-4 mr-2" />
             {isSaving ? "Saving..." : "Save"}
           </Button>
@@ -191,10 +185,7 @@ export const BuilderHeader = memo(function BuilderHeader({
       </div>
 
       <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
-        <SheetContent
-          side="bottom"
-          className="bg-gray-900 border-gray-800 h-[85vh]"
-        >
+        <SheetContent side="bottom" className=" h-[85vh]">
           <SheetHeader>
             <SheetTitle className="text-white">Menu</SheetTitle>
           </SheetHeader>
@@ -204,7 +195,6 @@ export const BuilderHeader = memo(function BuilderHeader({
               <Button
                 size="lg"
                 variant="outline"
-                className="border-gray-700 text-white hover:bg-gray-800"
                 onClick={() => {
                   setShowMobileMenu(false);
                   setShowShareModal(true);
@@ -216,7 +206,6 @@ export const BuilderHeader = memo(function BuilderHeader({
 
               <Button
                 size="lg"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white"
                 onClick={() => {
                   setShowMobileMenu(false);
                   handlePreview();
@@ -230,7 +219,6 @@ export const BuilderHeader = memo(function BuilderHeader({
             <Button
               size="lg"
               variant="outline"
-              className="w-full border-gray-700 text-white hover:bg-gray-800"
               onClick={() => {
                 setShowMobileMenu(false);
                 router.push(`/analytics/${formId}`);
