@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import DotGrid from "@/components/dot-grid";
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,7 +20,13 @@ export default function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   return (
-    <section ref={containerRef} className="relative min-h-[120vh] bg-white dark:bg-black text-black dark:text-white overflow-hidden pt-32 sm:pt-40">
+    <section ref={containerRef} className="relative min-h-[150vh] bg-white dark:bg-black text-black dark:text-white overflow-hidden pt-32 sm:pt-40">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <DotGrid 
+         dotSize={4}
+          className="w-full h-full opacity-20 dark:opacity-30" 
+        />
+      </div>
       <div className="sticky top-0 h-screen flex flex-col items-center justify-center ">
         <motion.div 
           style={{ opacity, y }} 

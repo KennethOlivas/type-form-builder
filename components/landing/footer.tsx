@@ -1,6 +1,7 @@
 "use client";
 import Reveal from "@/components/landing/reveal";
 import Link from "next/link";
+import { Github, Twitter, Linkedin, Code2 } from "lucide-react";
 
 export default function LandingFooter() {
   return (
@@ -42,22 +43,31 @@ export default function LandingFooter() {
 
             <div>
               <h4 className="font-semibold mb-4 text-black dark:text-white">Connect</h4>
-              <ul className="space-y-2 text-sm text-zinc-500 dark:text-zinc-500">
-                <li>
-                  <Link href="#" className="hover:text-black dark:hover:text-white transition-colors">Twitter</Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-black dark:hover:text-white transition-colors">GitHub</Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-black dark:hover:text-white transition-colors">LinkedIn</Link>
-                </li>
-              </ul>
+              <div className="flex space-x-4 mb-4">
+                <Link href="#" className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
+                  <Twitter className="h-5 w-5" />
+                </Link>
+                <Link href="https://github.com/KennethOlivas" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
+                  <Github className="h-5 w-5" />
+                </Link>
+                <Link href="#" className="text-zinc-500 hover:text-black dark:hover:text-white transition-colors">
+                  <Linkedin className="h-5 w-5" />
+                </Link>
+              </div>
+              <Link 
+                href="https://github.com/KennethOlivas/type-form-builder" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
+              >
+                <Code2 className="h-4 w-4" />
+                <span>View Project</span>
+              </Link>
             </div>
           </div>
 
           <div className="border-t border-zinc-100 dark:border-zinc-900 pt-8 text-center text-sm text-zinc-600 dark:text-zinc-600">
-            <p>&copy; 2025 FormFlow. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} FormFlow. Created by <a href="https://github.com/KennethOlivas" target="_blank" rel="noopener noreferrer" className="hover:text-black dark:hover:text-white transition-colors font-medium">Kenneth Olivas</a>. All rights reserved.</p>
           </div>
         </div>
       </footer>
