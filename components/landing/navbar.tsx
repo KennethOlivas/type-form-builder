@@ -4,29 +4,29 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function LandingNavbar() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border backdrop-blur-xl bg-background/80">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-black/5 dark:border-white/10 backdrop-blur-xl bg-white/70 dark:bg-black/70 supports-backdrop-filter:bg-white/60 dark:supports-backdrop-filter:bg-black/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           <div className="flex items-center gap-8">
-            <Link href="/" className="text-xl font-bold">
+            <Link href="/" className="text-lg font-semibold tracking-tight text-black dark:text-white">
               FormFlow
             </Link>
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-6 text-sm">
               <Link
                 href="#features"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
               >
                 Product
               </Link>
               <Link
                 href="#templates"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
               >
                 Templates
               </Link>
               <Link
                 href="#pricing"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
               >
                 Pricing
               </Link>
@@ -37,13 +37,13 @@ export default function LandingNavbar() {
             <Button
               variant="ghost"
               asChild
-              className="text-muted-foreground hover:text-foreground"
+              className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 h-8 px-3 text-sm"
             >
-              <Link href="/login">Login</Link>
+              <Link href="/login">Log in</Link>
             </Button>
             <Button
               asChild
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="bg-black text-white hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200 h-8 px-4 rounded-full text-sm font-medium transition-all"
             >
               <Link href="/signup">Sign Up</Link>
             </Button>
