@@ -31,6 +31,7 @@ import { WelcomeModal } from "./welcome-modal";
 import { toast } from "sonner";
 import { useCreateForm, useUpdateForm } from "@/hooks/use-forms";
 import { ThemeToggle } from "../theme-toggle";
+import { Form } from "@/lib/local-data-service";
 
 interface BuilderHeaderProps {
   formId: string;
@@ -63,7 +64,7 @@ export const BuilderHeader = memo(function BuilderHeader({
   const isSaving = updateFormMutation.isLoading || createFormMutation.isLoading;
 
   const saveForm = async () => {
-    const formDataToSave = {
+    const formDataToSave: Omit<Form, "id" | "createdAt" | "updatedAt"> = {
       title: formTitle,
       description: formDescription,
       questions,
@@ -78,7 +79,12 @@ export const BuilderHeader = memo(function BuilderHeader({
         toast.success("Form created");
         router.push(`/builder/${result.formId}`);
       } else {
-        await updateFormMutation.mutate({ id: formId, ...formDataToSave });
+        const formToUpdate:  Omit<Form, "createdAt" | "updatedAt"> = {
+          id: formId,
+          ...formDataToSave,
+        }
+        console.log("Updating form:", formToUpdate);
+        await updateFormMutation.mutate(formToUpdate);
         toast.success("Form saved successfully");
       }
     } catch (error) {

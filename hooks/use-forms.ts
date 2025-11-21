@@ -167,7 +167,9 @@ export function useUpdateForm() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ formData: updates }),
+          body: JSON.stringify({ formData: {
+            id, ...updates
+          } }),
         });
         if (!res.ok) {
           throw new Error("Failed to update form");

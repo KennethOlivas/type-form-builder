@@ -43,6 +43,21 @@ export const PUT = async (request: NextRequest) => {
     })
     .where(eq(form.id, formData.id));
 
+  await db.delete(question).where(eq(question.formId, formData.id));
+  await db
+    .insert(question)
+    .values(
+      formData.questions.map((q) => ({
+        id: crypto.randomUUID(),
+        formId: formData.id,
+        type: q.type,
+        label: q.label,
+        description: q.description || null,
+        placeholder: q.placeholder || null,
+      })),
+    )
+    .returning();
+
   // For simplicity, delete existing questions and re-insert
   return NextResponse.json({ message: "Form updated successfully" });
 };
