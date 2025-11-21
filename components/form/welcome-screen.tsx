@@ -76,7 +76,7 @@ export function WelcomeScreen({ welcomeScreen, formStyle, respondentCount, onSta
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						transition={{ delay: 0.5 }}
-						className="flex flex-wrap gap-4 text-sm opacity-70"
+						className="flex flex-wrap gap-4 text-sm opacity-70 justify-center"
 					>
 						{welcomeScreen.showTimeEstimate && welcomeScreen.timeEstimate && (
 							<div className="flex items-center gap-2">

@@ -126,13 +126,9 @@ export default function Form({ id }: FormCProps) {
       style={{ backgroundColor: formStyle.backgroundColor, color: formStyle.textColor }}
     >
       <ProgressBar progress={progress} color={formStyle.buttonColor} />
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 relative z-10">
-        <div className="w-full max-w-3xl">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-4 sm:mb-6 text-center">
-            <span className="text-xs sm:text-sm opacity-60" style={{ color: formStyle.textColor }}>
-              {currentQuestionIndex + 1} of {questions.length}
-            </span>
-          </motion.div>
+      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 md:p-12 relative z-10 min-h-[80vh]">
+        <div className="w-full max-w-2xl mx-auto">
+          {/* Progress indicator moved to header in QuestionHeader, removing separate count here */}
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={currentQuestion.id}

@@ -40,6 +40,10 @@ export const POST = async (request: NextRequest) => {
         label: q.label,
         description: q.description || null,
         placeholder: q.placeholder || null,
+        required: q.required,
+        options: q.options || null,
+        allowMultiple: q.allowMultiple || false,
+        ratingScale: q.ratingScale || null,
       })),
     )
     .returning();

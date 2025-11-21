@@ -54,6 +54,10 @@ export const PUT = async (request: NextRequest) => {
         label: q.label,
         description: q.description || null,
         placeholder: q.placeholder || null,
+        required: q.required,
+        options: q.options || null,
+        allowMultiple: q.allowMultiple || false,
+        ratingScale: q.ratingScale || null,
       })),
     )
     .returning();
@@ -92,7 +96,10 @@ export const GET = async (request: NextRequest) => {
     label: q.label,
     description: q.description || undefined,
     placeholder: q.placeholder || undefined,
-    required: false,
+    required: q.required,
+    options: (q.options as string[]) || undefined,
+    allowMultiple: q.allowMultiple || undefined,
+    ratingScale: q.ratingScale || undefined,
   }));
 
   const formData: Form = {

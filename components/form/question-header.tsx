@@ -15,23 +15,26 @@ export function QuestionHeader({ questionLabel, description, required, formStyle
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="space-y-2"
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="space-y-4 mb-8"
     >
+      <div className="flex items-center gap-3 text-sm font-medium uppercase tracking-widest opacity-60 mb-4" style={{ color: formStyle.textColor }}>
+        <span>{currentIndex + 1} <span className="mx-1">/</span> {total}</span>
+        <span className="flex-1 h-px bg-current opacity-20"></span>
+      </div>
+
       <h2
-        className="text-xl sm:text-2xl font-semibold tracking-tight"
+        className="text-2xl sm:text-3xl md:text-4xl font-light leading-tight"
         style={{ color: formStyle.textColor }}
       >
-        {questionLabel}{required && <span className="text-red-400 ml-1">*</span>}
+        {questionLabel}{required && <span className="text-red-400 ml-1 text-lg align-top">*</span>}
       </h2>
+
       {description && (
-        <p className="text-sm opacity-80" style={{ color: formStyle.textColor }}>
+        <p className="text-lg sm:text-xl opacity-70 font-light max-w-2xl" style={{ color: formStyle.textColor }}>
           {description}
         </p>
       )}
-      <div className="text-xs opacity-60" style={{ color: formStyle.textColor }}>
-        Question {currentIndex + 1} / {total}
-      </div>
     </motion.div>
   )
 }
