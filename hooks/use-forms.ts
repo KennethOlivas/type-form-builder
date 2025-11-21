@@ -64,6 +64,7 @@ export function useFormData(formId: string) {
   const [data, setData] = useState<Form | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
   const fetchData = useCallback(async () => {
     if (!formId || formId === "new") {
@@ -73,17 +74,22 @@ export function useFormData(formId: string) {
 
     setIsLoading(true);
     try {
+      setNotFound(false);
       const res = await fetch(`/api/form/${formId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      if (!res.ok) {
+      if (res.status === 404) {
+        setNotFound(true);
+        setData(null);
+      } else if (!res.ok) {
         throw new Error("Failed to fetch form");
+      } else {
+        const formData = await res.json();
+        setData(formData);
       }
-      const formData = await res.json();
-      setData(formData);
     } catch (err) {
       setError(err as Error);
     } finally {
@@ -115,7 +121,7 @@ export function useFormData(formId: string) {
     fetchData();
   }, [fetchData]);
 
-  return { data, isLoading, error, refetch };
+  return { data, isLoading, error, notFound, refetch };
 }
 
 // Create Form Action
