@@ -65,18 +65,21 @@ export function AddItemPanel({ isMobile = false }: AddItemPanelProps) {
 
   if (isMobile) {
     return (
-      <div className="space-y-2">
+      <ScrollArea className="h-[calc(80vh-80px)]">
+      <div className="space-y-2 px-4 mb-8">
         {questionTypes.map((type) => (
-          <button
+          <Button
+          variant="outline"
             key={type.value}
             onClick={() => addItem(type.value as Question["type"])}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-muted hover:bg-accent border border-border transition-all text-left"
+            className="w-full flex justify-start items-center gap-3 px-4 py-3 "
           >
-            <type.icon className="w-5 h-5 text-muted-foreground" />
-            <span className="text-sm text-foreground">{type.label}</span>
-          </button>
+            <type.icon className="w-5 h-5" />
+            <span className="text-sm">{type.label}</span>
+          </Button>
         ))}
       </div>
+      </ScrollArea>
     );
   }
 

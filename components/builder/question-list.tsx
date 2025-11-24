@@ -134,7 +134,7 @@ export const QuestionList = memo(function QuestionList({
 
   return (
     <ScrollArea className="flex-1  ">
-      <div className="max-w-2xl mx-auto space-y-4 mb-2 mt-4">
+      <div className="max-w-2xl mx-auto space-y-4 mb-2 mt-4 px-4 md:px-0">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

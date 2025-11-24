@@ -21,9 +21,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DesignPanel } from "./design-panel";
-import { WelcomeScreenPanel } from "./welcome-screen-panel";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { DesignPanel } from "./design-panel";
+// import { WelcomeScreenPanel } from "./welcome-screen-panel";
 import { useRouter } from "next/navigation";
 import { ShareFormModal } from "@/components/share-form-modal";
 import { DesignModal } from "./design-modal";
@@ -203,7 +203,7 @@ export const BuilderHeader = memo(function BuilderHeader({
             <Eye className="w-4 h-4 mr-2" />
             Preview
           </Button>
-          <div className="flex items-center gap-2 mr-2">
+          <div className="flex items-center gap-2 mr-2 hidden lg:flex">
             <Select
               value={status}
               onValueChange={async (value: "published" | "draft" | "closed") => {
@@ -256,12 +256,12 @@ export const BuilderHeader = memo(function BuilderHeader({
       </div>
 
       <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
-        <SheetContent side="bottom" className=" h-[85vh]">
+        <SheetContent side="bottom" className="pb-8">
           <SheetHeader>
-            <SheetTitle className="text-white">Menu</SheetTitle>
+            <SheetTitle className="text-white">Actions</SheetTitle>
           </SheetHeader>
 
-          <div className="mt-6 space-y-4">
+          <div className="mt-6 space-y-4 px-2">
             <div className="grid grid-cols-2 gap-3">
               <Button
                 size="lg"
@@ -277,6 +277,7 @@ export const BuilderHeader = memo(function BuilderHeader({
 
               <Button
                 size="lg"
+                variant="outline"
                 onClick={() => {
                   setShowMobileMenu(false);
                   handlePreview();
@@ -285,52 +286,88 @@ export const BuilderHeader = memo(function BuilderHeader({
                 <Eye className="w-4 h-4 mr-2" />
                 Preview
               </Button>
-            </div>
 
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => {
-                setShowMobileMenu(false);
-                router.push(`/analytics/${formId}`);
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  router.push(`/analytics/${formId}`);
+                }}
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Analytics
+              </Button>
+
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setShowWelcomeModal(true);
+                }}
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Welcome
+              </Button>
+
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setShowDesignModal(true);
+                }}
+              >
+                <Palette className="w-4 h-4 mr-2" />
+                Design
+              </Button>
+
+              
+            <Select
+              value={status}
+              onValueChange={async (value: "published" | "draft" | "closed") => {
+                setStatus(value);
+                try {
+                  const result = await updateFormStatus(formId, value);
+                  if (result.success) {
+                    toast.success(`Form ${value}`);
+                  } else {
+                    toast.error(result.error);
+                  }
+                } catch (error) {
+                  toast.error("Failed to update status");
+                }
               }}
             >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Analytics
-            </Button>
+              <SelectTrigger size="lg" className="w-full">
+                <div className="flex items-center ">
+                  <SelectValue placeholder="Status" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="published">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    Published
+                  </div>
+                </SelectItem>
+                <SelectItem value="draft">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-gray-500" />
+                    Draft
+                  </div>
+                </SelectItem>
+                <SelectItem value="closed">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    Closed
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            </div>
 
-            <Tabs fullWidth defaultValue="welcome" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-gray-800/50">
-                <TabsTrigger
-                  value="welcome"
-                  className="data-[state=active]:bg-indigo-600 flex items-center"
-                >
-                  <Home className="w-4 h-4 mr-2" />
-                  Welcome
-                </TabsTrigger>
-                <TabsTrigger
-                  value="design"
-                  className="data-[state=active]:bg-indigo-600 flex items-center"
-                >
-                  <Palette className="w-4 h-4 mr-2" />
-                  Design
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent
-                value="welcome"
-                className="mt-4 space-y-4 max-h-[calc(85vh-260px)] overflow-y-auto"
-              >
-                <WelcomeScreenPanel />
-              </TabsContent>
-
-              <TabsContent
-                value="design"
-                className="mt-4 space-y-4 max-h-[calc(85vh-260px)] overflow-y-auto"
-              >
-                <DesignPanel />
-              </TabsContent>
-            </Tabs>
           </div>
         </SheetContent>
       </Sheet>

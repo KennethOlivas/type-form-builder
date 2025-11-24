@@ -42,14 +42,14 @@ export const MobileSheets = memo(function MobileSheets({
         <SheetTrigger asChild>
           <Button
             size="lg"
-            className="rounded-full w-14 h-14 shadow-lg bg-indigo-600 hover:bg-indigo-700"
+            className="rounded-full w-14 h-14 shadow-lg"
           >
             <Plus className="w-6 h-6" />
           </Button>
         </SheetTrigger>
         <SheetContent
           side="bottom"
-          className="bg-gray-900 border-gray-800 h-[80vh]"
+          className="backdrop-blur-xl"
         >
           <SheetHeader>
             <SheetTitle className="text-white">Add Item</SheetTitle>
@@ -64,7 +64,7 @@ export const MobileSheets = memo(function MobileSheets({
       <Sheet open={showSettingsSheet} onOpenChange={onSettingsSheetChange}>
         <SheetContent
           side="bottom"
-          className="bg-gray-900 border-gray-800 h-[80vh]"
+   
         >
           <SheetHeader>
             <SheetTitle className="text-white">
@@ -78,23 +78,21 @@ export const MobileSheets = memo(function MobileSheets({
           </SheetHeader>
 
           <Tabs fullWidth value={activeTab} onValueChange={setActiveTab} className="mt-4">
-            <TabsList className="grid w-full grid-cols-2 bg-gray-800/50">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger
                 value="settings"
-                className="data-[state=active]:bg-gray-700"
               >
                 Settings
               </TabsTrigger>
               <TabsTrigger
                 value="logic"
-                className="data-[state=active]:bg-gray-700"
               >
                 Logic
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="settings" className="mt-4">
-              <ScrollArea className="h-[calc(80vh-170px)]">
+              <ScrollArea className="h-[calc(80vh-170px)] -4">
                 <SettingsPanel />
               </ScrollArea>
             </TabsContent>

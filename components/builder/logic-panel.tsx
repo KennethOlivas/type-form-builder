@@ -113,7 +113,7 @@ export const LogicPanel = memo(function LogicPanel() {
   const availableDestinations = questions.slice(currentQuestionIndex + 1);
 
   return (
-    <ScrollArea className="h-[80vh]">
+    <ScrollArea className="h-[80vh] pb-4">
       <div className="p-4 space-y-6">
         <div>
           <div className="flex items-center justify-between mb-4">
