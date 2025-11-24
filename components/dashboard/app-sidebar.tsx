@@ -49,7 +49,7 @@ import {
     createWorkspace,
     updateWorkspace,
     deleteWorkspace,
-} from "@/lib/workspace-actions";
+} from "@/actions/workspace-actions";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 

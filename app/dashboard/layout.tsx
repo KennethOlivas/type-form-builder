@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { getWorkspaces, createWorkspace } from "@/lib/workspace-actions";
+import { getWorkspaces, createWorkspace } from "@/actions/workspace-actions";
 
 export default async function DashboardLayout({
     children,

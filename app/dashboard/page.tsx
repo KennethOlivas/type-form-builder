@@ -4,7 +4,7 @@ import { form, submission, workspaceForm } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { eq, count, getTableColumns, and } from "drizzle-orm";
 import { headers } from "next/headers";
-import { getWorkspaces } from "@/lib/workspace-actions";
+import { getWorkspaces } from "@/actions/workspace-actions";
 
 export default async function DashboardPage({
   searchParams,
