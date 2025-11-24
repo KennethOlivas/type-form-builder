@@ -58,7 +58,7 @@ export function QRCode({
           },
           errorCorrectionLevel: level,
         } as QRCodeCanvasOptions,
-        (error: Error | null) => {
+        (error: Error | null | undefined) => {
           if (error) console.error("[v0] QR Code generation error:", error);
         },
       );

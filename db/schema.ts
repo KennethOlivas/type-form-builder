@@ -7,6 +7,7 @@ import {
   jsonb,
   uuid,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -153,6 +154,27 @@ export const submission = pgTable("submission", {
     .notNull(),
 });
 
+export const formVisit = pgTable("form_visit", {
+  id: text("id").primaryKey(),
+  formId: text("form_id")
+    .notNull()
+    .references(() => form.id, { onDelete: "cascade" }),
+  device: text("device"), // 'desktop', 'mobile', 'tablet'
+  browser: text("browser"),
+  os: text("os"),
+  ip: text("ip"),
+  country: text("country"),
+  startedAt: timestamp("started_at"),
+  completedAt: timestamp("completed_at"),
+  lastInteractionAt: timestamp("last_interaction_at").defaultNow().notNull(),
+  lastQuestionId: text("last_question_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
 export const schema = {
   user,
   session,
@@ -163,4 +185,52 @@ export const schema = {
   logicJump,
   logicRule,
   submission,
+  formVisit,
 };
+
+export const formRelations = relations(form, ({ one, many }) => ({
+  questions: many(question),
+  submissions: many(submission),
+  visits: many(formVisit),
+  author: one(user, {
+    fields: [form.createdBy],
+    references: [user.id],
+  }),
+}));
+
+export const questionRelations = relations(question, ({ one, many }) => ({
+  form: one(form, {
+    fields: [question.formId],
+    references: [form.id],
+  }),
+  logicJumps: many(logicJump),
+}));
+
+export const logicJumpRelations = relations(logicJump, ({ one, many }) => ({
+  question: one(question, {
+    fields: [logicJump.questionId],
+    references: [question.id],
+  }),
+  rules: many(logicRule),
+}));
+
+export const logicRuleRelations = relations(logicRule, ({ one }) => ({
+  logicJump: one(logicJump, {
+    fields: [logicRule.logicJumpId],
+    references: [logicJump.id],
+  }),
+}));
+
+export const submissionRelations = relations(submission, ({ one }) => ({
+  form: one(form, {
+    fields: [submission.formId],
+    references: [form.id],
+  }),
+}));
+
+export const formVisitRelations = relations(formVisit, ({ one }) => ({
+  form: one(form, {
+    fields: [formVisit.formId],
+    references: [form.id],
+  }),
+}));

@@ -52,9 +52,78 @@ export default function Form({ id }: FormCProps) {
     // reserved for style side-effects if needed
   }, [formData])
 
+  const [visitId, setVisitId] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Track View
+    const trackView = async () => {
+      try {
+        const res = await fetch("/api/analytics/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ formId: id, event: "view" }),
+        })
+        const data = await res.json()
+        if (data.visitId) setVisitId(data.visitId)
+      } catch (error) {
+        console.error("Failed to track view", error)
+      }
+    }
+    trackView()
+  }, [id])
+
+  const trackStart = async () => {
+    if (!visitId) return
+    try {
+      await fetch("/api/analytics/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ formId: id, visitId, event: "start" }),
+      })
+    } catch (error) {
+      console.error("Failed to track start", error)
+    }
+  }
+
+  const trackProgress = async (questionId: string) => {
+    if (!visitId) return
+    try {
+      await fetch("/api/analytics/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ formId: id, visitId, event: "progress", data: { questionId } }),
+      })
+    } catch (error) {
+      console.error("Failed to track progress", error)
+    }
+  }
+
+  const trackComplete = async () => {
+    if (!visitId) return
+    try {
+      await fetch("/api/analytics/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ formId: id, visitId, event: "complete" }),
+      })
+    } catch (error) {
+      console.error("Failed to track complete", error)
+    }
+  }
+
   const handleNext = () => {
     const currentAnswer = answers[currentQuestion.id]
     if (currentQuestion.required && !currentAnswer) return
+
+    // Track progress (question answered)
+    trackProgress(currentQuestion.id)
+
+    // If this is the first question and no welcome screen, or if we just started
+    // Actually, start is better tracked when they actually start.
+    // If welcome screen exists, start is tracked on onStart.
+    // If not, start should be tracked on first interaction? 
+    // Let's handle start in onStart prop or useEffect if no welcome screen.
+
     const logicDestination = evaluateLogic(
       currentQuestion,
       Array.isArray(currentAnswer) ? currentAnswer.join(",") : String(currentAnswer ?? ""),
@@ -87,7 +156,9 @@ export default function Form({ id }: FormCProps) {
   const handleSubmit = () => {
     const currentAnswer = answers[currentQuestion.id]
     if (currentQuestion.required && !currentAnswer) return
-    //TODO: add location gps country and platform to answers
+
+    trackProgress(currentQuestion.id)
+    trackComplete()
 
     submitFormMutation.mutate({ formId: id, answers })
     setIsSubmitted(true)
@@ -107,6 +178,49 @@ export default function Form({ id }: FormCProps) {
     }
   }, [notFound, router])
 
+  // Handle Start tracking if no welcome screen
+  useEffect(() => {
+    if (!isLoading && !welcomeScreen?.enabled && visitId) {
+      // If no welcome screen, we could consider "Start" as soon as they view? 
+      // Or better, when they answer the first question.
+      // But "Starts" usually means "Started filling it out".
+      // If no welcome screen, the first question is visible immediately.
+      // Let's track start when they interact with the first question?
+      // Or just trigger it once on mount if no welcome screen?
+      // Let's trigger it on first interaction (handleNext) if not already started?
+      // Simplest: If no welcome screen, "View" is "Start"? No, that inflates starts.
+      // Let's stick to: Start = Clicked "Start" on Welcome Screen OR Answered first question.
+    }
+  }, [isLoading, welcomeScreen, visitId])
+
+  // We need a state to track if started
+  const [hasStarted, setHasStarted] = useState(false)
+
+  const handleStart = () => {
+    setShowWelcome(false)
+    if (!hasStarted) {
+      setHasStarted(true)
+      trackStart()
+    }
+  }
+
+  // If no welcome screen, we need to track start on first answer
+  const handleNextWithStart = () => {
+    if (!hasStarted) {
+      setHasStarted(true)
+      trackStart()
+    }
+    handleNext()
+  }
+
+  const handleSubmitWithStart = () => {
+    if (!hasStarted) {
+      setHasStarted(true)
+      trackStart()
+    }
+    handleSubmit()
+  }
+
   if (isLoading) return <FormLoading />
   if (notFound) return null
 
@@ -117,7 +231,7 @@ export default function Form({ id }: FormCProps) {
         welcomeScreen={welcomeScreen}
         formStyle={formStyle}
         respondentCount={respondentCount}
-        onStart={() => setShowWelcome(false)}
+        onStart={handleStart}
       />
     )
   }
@@ -165,8 +279,8 @@ export default function Form({ id }: FormCProps) {
             isLast={currentQuestionIndex === questions.length - 1}
             formStyle={formStyle}
             onPrevious={handlePrevious}
-            onNext={handleNext}
-            onSubmit={handleSubmit}
+            onNext={handleNextWithStart}
+            onSubmit={handleSubmitWithStart}
           />
         </div>
       </div>

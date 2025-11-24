@@ -16,7 +16,7 @@ export const POST = async (request: NextRequest) => {
 
   const { formData } = (await request.json()) as { formData: Form };
   // Here you would typically handle form creation logic, e.g., saving to a database
-  const formId = c
+  const formId = crypto.randomUUID();
 
   await db
     .insert(form)
