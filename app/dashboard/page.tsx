@@ -112,7 +112,7 @@ export default function DashboardPage() {
                             Responses
                           </span>
                           <span className="font-semibold">
-                            {/* {form.responses} */} 0
+                            {form.responses || 0}
                           </span>
                         </div>
                       </div>

@@ -1,9 +1,9 @@
 import { Form } from "@/lib/local-data-service";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { form, question } from "@/db/schema";
+import { form, question, submission } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { eq } from "drizzle-orm";
+import { eq, count, getTableColumns } from "drizzle-orm";
 
 export const POST = async (request: NextRequest) => {
   const user = await auth.api.getSession(request);
@@ -61,9 +61,14 @@ export const GET = async (request: NextRequest) => {
   const userId = userData.user.id;
 
   const response = await db
-    .select()
+    .select({
+      ...getTableColumns(form),
+      responses: count(submission.id),
+    })
     .from(form)
-    .where(eq(form.createdBy, userId));
+    .leftJoin(submission, eq(form.id, submission.formId))
+    .where(eq(form.createdBy, userId))
+    .groupBy(form.id);
 
   return NextResponse.json({ forms: response });
 };

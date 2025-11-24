@@ -1,16 +1,16 @@
 export interface Question {
   id: string;
   type:
-    | "short-text"
-    | "long-text"
-    | "multiple-choice"
-    | "email"
-    | "phone"
-    | "date"
-    | "rating"
-    | "yes-no"
-    | "dropdown"
-    | "file-upload";
+  | "short-text"
+  | "long-text"
+  | "multiple-choice"
+  | "email"
+  | "phone"
+  | "date"
+  | "rating"
+  | "yes-no"
+  | "dropdown"
+  | "file-upload";
   label: string;
   description?: string;
   placeholder?: string;
@@ -55,6 +55,7 @@ export interface Form {
   welcomeScreen?: WelcomeScreen;
   createdAt: string;
   updatedAt: string;
+  responses?: number;
 }
 
 export interface FormMetadata {
@@ -78,18 +79,18 @@ export interface Submission {
 export interface LogicRule {
   id: string;
   operator:
-    | "is"
-    | "is-not"
-    | "contains"
-    | "does-not-contain"
-    | "starts-with"
-    | "is-empty"
-    | "is-not-empty"
-    | "equals"
-    | "not-equals"
-    | "greater-than"
-    | "less-than"
-    | "between";
+  | "is"
+  | "is-not"
+  | "contains"
+  | "does-not-contain"
+  | "starts-with"
+  | "is-empty"
+  | "is-not-empty"
+  | "equals"
+  | "not-equals"
+  | "greater-than"
+  | "less-than"
+  | "between";
   value?: string | number;
   valueMax?: number; // For "between" operator
   destinationType: "next-question" | "specific-question" | "end-form";
