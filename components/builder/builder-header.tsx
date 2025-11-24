@@ -100,7 +100,7 @@ export const BuilderHeader = memo(function BuilderHeader({
   };
 
   return (
-    <div className="border-b bg-accent backdrop-blur-xl">
+    <div className="border-b bg-card/50 backdrop-blur-xl sticky top-0 z-50">
       <div className="px-4 lg:px-6 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-1 min-w-0">
           <Link href="/dashboard">

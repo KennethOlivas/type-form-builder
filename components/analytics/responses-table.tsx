@@ -275,27 +275,104 @@ export function ResponsesTable({ submissions, questions }: ResponsesTableProps) 
             </div>
 
             <Sheet open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-                <SheetContent className="w-[400px] sm:w-[540px]">
-                    <SheetHeader>
-                        <SheetTitle>Response Details</SheetTitle>
+                <SheetContent className="w-[400px] sm:w-[600px] flex flex-col h-full">
+                    <SheetHeader className="border-b pb-4">
+                        <SheetTitle className="flex items-center justify-between">
+                            <span>Response Details</span>
+                            <div className="flex items-center gap-2 mr-6">
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => {
+                                        const currentIndex = submissions.findIndex(s => s.id === selectedSubmission?.id)
+                                        if (currentIndex > 0) {
+                                            setSelectedSubmission(submissions[currentIndex - 1])
+                                        }
+                                    }}
+                                    disabled={!selectedSubmission || submissions.findIndex(s => s.id === selectedSubmission.id) === 0}
+                                >
+                                    <ChevronDown className="h-4 w-4 rotate-90" />
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => {
+                                        const currentIndex = submissions.findIndex(s => s.id === selectedSubmission?.id)
+                                        if (currentIndex < submissions.length - 1) {
+                                            setSelectedSubmission(submissions[currentIndex + 1])
+                                        }
+                                    }}
+                                    disabled={!selectedSubmission || submissions.findIndex(s => s.id === selectedSubmission.id) === submissions.length - 1}
+                                >
+                                    <ChevronDown className="h-4 w-4 -rotate-90" />
+                                </Button>
+                            </div>
+                        </SheetTitle>
                         <SheetDescription>
                             Submitted on {selectedSubmission && format(new Date(selectedSubmission.submittedAt), "PPpp")}
                         </SheetDescription>
                     </SheetHeader>
-                    <ScrollArea className="h-[calc(100vh-100px)] mt-6 pr-4">
-                        <div className="space-y-6">
-                            {selectedSubmission && questions.map((q) => (
-                                <div key={q.id} className="space-y-1">
-                                    <h4 className="text-sm font-medium text-muted-foreground">{q.label}</h4>
-                                    <p className="text-sm">
-                                        {Array.isArray(selectedSubmission.answers[q.id])
-                                            ? selectedSubmission.answers[q.id].join(", ")
-                                            : selectedSubmission.answers[q.id] || "No answer"}
-                                    </p>
+
+                    <ScrollArea className="flex-1 -mx-6 px-6">
+                        <div className="space-y-6 py-6">
+                            {selectedSubmission && questions.map((q, index) => (
+                                <div key={q.id} className="bg-muted/30 p-4 rounded-lg border space-y-2">
+                                    <div className="flex items-start gap-3">
+                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                                            {index + 1}
+                                        </span>
+                                        <div className="space-y-1 flex-1">
+                                            <h4 className="text-sm font-medium leading-none">{q.label}</h4>
+                                            <p className="text-xs text-muted-foreground">{q.type}</p>
+                                        </div>
+                                    </div>
+                                    <div className="pl-9">
+                                        <p className="text-sm font-medium">
+                                            {Array.isArray(selectedSubmission.answers[q.id])
+                                                ? selectedSubmission.answers[q.id].join(", ")
+                                                : selectedSubmission.answers[q.id] || <span className="text-muted-foreground italic">No answer</span>}
+                                        </p>
+                                    </div>
                                 </div>
                             ))}
+
+                            {selectedSubmission && (
+                                <div className="border-t pt-6 mt-6 space-y-4">
+                                    <h4 className="font-semibold">Metadata</h4>
+                                    <div className="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <span className="text-muted-foreground block">ID</span>
+                                            <span className="font-mono text-xs">{selectedSubmission.id}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-muted-foreground block">Device</span>
+                                            <span className="capitalize">{selectedSubmission.device || "Unknown"}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </ScrollArea>
+
+                    <div className="border-t pt-4 mt-auto">
+                        <Button
+                            variant="destructive"
+                            className="w-full"
+                            onClick={async () => {
+                                if (confirm("Are you sure you want to delete this submission?")) {
+                                    try {
+                                        await fetch(`/api/submissions/${selectedSubmission.id}`, { method: "DELETE" })
+                                        window.location.reload()
+                                    } catch (e) {
+                                        console.error(e)
+                                    }
+                                }
+                            }}
+                        >
+                            <Trash className="mr-2 h-4 w-4" />
+                            Delete Response
+                        </Button>
+                    </div>
                 </SheetContent>
             </Sheet>
         </div>

@@ -17,6 +17,7 @@ import {
     Cell,
     Legend,
 } from "recharts"
+import { FormStructure } from "./form-structure"
 
 interface ChartsSectionProps {
     charts: {
@@ -36,6 +37,7 @@ export function ChartsSection({ charts, questionAnalysis, questions }: ChartsSec
             <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="questions">Question Analysis</TabsTrigger>
+                <TabsTrigger value="structure">Structure</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
@@ -211,6 +213,9 @@ export function ChartsSection({ charts, questionAnalysis, questions }: ChartsSec
                         </Card>
                     )
                 })}
+            </TabsContent>
+            <TabsContent value="structure">
+                <FormStructure questions={questions} />
             </TabsContent>
         </Tabs>
     )
