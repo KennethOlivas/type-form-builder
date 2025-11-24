@@ -44,12 +44,24 @@ import {
 } from "@/components/ui/sheet"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
 interface ResponsesTableProps {
     submissions: any[]
     questions: any[]
+    refreshData: () => void
 }
 
-export function ResponsesTable({ submissions, questions }: ResponsesTableProps) {
+export function ResponsesTable({ submissions, questions, refreshData }: ResponsesTableProps) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -58,6 +70,8 @@ export function ResponsesTable({ submissions, questions }: ResponsesTableProps) 
 
     const [selectedSubmission, setSelectedSubmission] = React.useState<any>(null)
     const [isDetailsOpen, setIsDetailsOpen] = React.useState(false)
+    const [deleteId, setDeleteId] = React.useState<string | null>(null)
+    const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
 
     // Define columns dynamically
     const columns: ColumnDef<any>[] = React.useMemo(() => {
@@ -116,16 +130,9 @@ export function ResponsesTable({ submissions, questions }: ResponsesTableProps) 
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                                 className="text-destructive"
-                                onClick={async () => {
-                                    if (confirm("Are you sure you want to delete this submission?")) {
-                                        try {
-                                            await fetch(`/api/submissions/${submission.id}`, { method: "DELETE" })
-                                            // Ideally refresh data here, but for now we rely on page refresh or parent re-fetch
-                                            window.location.reload()
-                                        } catch (e) {
-                                            console.error(e)
-                                        }
-                                    }
+                                onClick={() => {
+                                    setDeleteId(submission.id)
+                                    setIsDeleteOpen(true)
                                 }}
                             >
                                 <Trash className="mr-2 h-4 w-4" />
@@ -358,15 +365,9 @@ export function ResponsesTable({ submissions, questions }: ResponsesTableProps) 
                         <Button
                             variant="destructive"
                             className="w-full"
-                            onClick={async () => {
-                                if (confirm("Are you sure you want to delete this submission?")) {
-                                    try {
-                                        await fetch(`/api/submissions/${selectedSubmission.id}`, { method: "DELETE" })
-                                        window.location.reload()
-                                    } catch (e) {
-                                        console.error(e)
-                                    }
-                                }
+                            onClick={() => {
+                                setDeleteId(selectedSubmission.id)
+                                setIsDeleteOpen(true)
                             }}
                         >
                             <Trash className="mr-2 h-4 w-4" />
@@ -375,6 +376,37 @@ export function ResponsesTable({ submissions, questions }: ResponsesTableProps) 
                     </div>
                 </SheetContent>
             </Sheet>
+
+            <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the submission.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            onClick={async () => {
+                                if (deleteId) {
+                                    try {
+                                        await fetch(`/api/submissions/${deleteId}`, { method: "DELETE" })
+                                        refreshData()
+                                        setIsDetailsOpen(false)
+                                        setSelectedSubmission(null)
+                                    } catch (e) {
+                                        console.error(e)
+                                    }
+                                }
+                            }}
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     )
 }

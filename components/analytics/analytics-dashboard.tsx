@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { useState, useEffect } from "react"
 import { format, subDays } from "date-fns"
 import { Calendar as CalendarIcon, Download } from "lucide-react"
@@ -32,27 +33,27 @@ export function AnalyticsDashboard({ id }: AnalyticsDashboardProps) {
     const [data, setData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true)
-            try {
-                const params = new URLSearchParams()
-                if (date?.from) params.append("startDate", date.from.toISOString())
-                if (date?.to) params.append("endDate", date.to.toISOString())
+    const fetchData = React.useCallback(async () => {
+        setLoading(true)
+        try {
+            const params = new URLSearchParams()
+            if (date?.from) params.append("startDate", date.from.toISOString())
+            if (date?.to) params.append("endDate", date.to.toISOString())
 
-                const res = await fetch(`/api/analytics/${id}?${params.toString()}`)
-                if (!res.ok) throw new Error("Failed to fetch analytics")
-                const jsonData = await res.json()
-                setData(jsonData)
-            } catch (error) {
-                console.error(error)
-            } finally {
-                setLoading(false)
-            }
+            const res = await fetch(`/api/analytics/${id}?${params.toString()}`)
+            if (!res.ok) throw new Error("Failed to fetch analytics")
+            const jsonData = await res.json()
+            setData(jsonData)
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false)
         }
-
-        fetchData()
     }, [id, date])
+
+    useEffect(() => {
+        fetchData()
+    }, [fetchData])
 
     const handleExport = () => {
         if (!data?.submissions) return
@@ -190,6 +191,7 @@ export function AnalyticsDashboard({ id }: AnalyticsDashboardProps) {
                     <ResponsesTable
                         submissions={data.submissions}
                         questions={data.form.questions}
+                        refreshData={fetchData}
                     />
                 </motion.div>
             </main>
