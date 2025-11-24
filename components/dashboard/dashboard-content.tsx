@@ -22,6 +22,7 @@ interface Form {
     style: any;
     welcomeScreen: any;
     createdBy: string;
+    status: "published" | "draft" | "closed";
 }
 
 interface DashboardContentProps {
@@ -67,7 +68,7 @@ export function DashboardContent({
         let processed = forms.map((form) => ({
             id: form.id,
             title: form.title,
-            status: "published" as "published" | "draft" | "closed",
+            status: form.status,
             responses: form.responses || 0,
             lastEdited: new Date(form.updatedAt).toLocaleDateString("en-US", {
                 month: "short",
@@ -157,6 +158,30 @@ export function DashboardContent({
                                         : "space-y-4"
                                 }
                             >
+                                {view === "grid" && hasWorkspace && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: filteredAndSortedForms.length * 0.05 }}
+                                    >
+                                        <Link href="/builder/new">
+                                            <Card className="group relative overflow-hidden transition-all h-full hover:shadow-md border-dashed border-2 hover:border-primary/50 bg-card/30 backdrop-blur-sm flex items-center justify-center cursor-pointer">
+                                                <div className="text-center space-y-4">
+                                                    <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                                        <Plus className="w-6 h-6 text-primary" />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-semibold">Create New Form</h3>
+                                                        <p className="text-sm text-muted-foreground mt-1">
+                                                            Start building your next form
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </Card>
+                                        </Link>
+                                    </motion.div>
+                                )}
+
                                 {filteredAndSortedForms.map((form, index) => (
                                     <motion.div
                                         key={form.id}
@@ -174,29 +199,7 @@ export function DashboardContent({
                                     </motion.div>
                                 ))}
 
-                                {view === "grid" && hasWorkspace && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: filteredAndSortedForms.length * 0.05 }}
-                                    >
-                                        <Link href="/builder/new">
-                                            <Card className="group relative overflow-hidden transition-all hover:shadow-md border-dashed border-2 hover:border-primary/50 bg-card/30 backdrop-blur-sm h-[300px] flex items-center justify-center cursor-pointer">
-                                                <div className="text-center space-y-4">
-                                                    <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                                                        <Plus className="w-6 h-6 text-primary" />
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="font-semibold">Create New Form</h3>
-                                                        <p className="text-sm text-muted-foreground mt-1">
-                                                            Start building your next form
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </Card>
-                                        </Link>
-                                    </motion.div>
-                                )}
+
                             </div>
                         </AnimatePresence>
                     )}

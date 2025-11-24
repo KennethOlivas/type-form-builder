@@ -66,6 +66,7 @@ export async function createForm(
             id: formId,
             title: validatedData.title,
             description: validatedData.description,
+            status: "draft",
             style: validatedData.style,
             welcomeScreen: validatedData.welcomeScreen || null,
             createdBy: userId,
@@ -133,6 +134,57 @@ export async function createForm(
             return { success: false, error: error.message };
         }
         return { success: false, error: "Failed to create form" };
+    }
+}
+
+/**
+ * Update form status
+ */
+export async function updateFormStatus(
+    id: string,
+    status: "published" | "draft" | "closed"
+): Promise<ActionResponse<{ success: true }>> {
+    try {
+        // Authenticate user
+        const user = await getAuthenticatedUser();
+        if (!user) {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        // Verify ownership
+        const existingForm = await db
+            .select()
+            .from(form)
+            .where(eq(form.id, id));
+
+        if (existingForm.length === 0) {
+            return { success: false, error: "Form not found" };
+        }
+
+        if (existingForm[0].createdBy !== user.id) {
+            return { success: false, error: "Unauthorized" };
+        }
+
+        // Update status
+        await db
+            .update(form)
+            .set({
+                status,
+                updatedAt: new Date(),
+            })
+            .where(eq(form.id, id));
+
+        revalidatePath("/dashboard");
+        revalidatePath(`/form/${id}`);
+        revalidatePath(`/builder/${id}`);
+
+        return { success: true, data: { success: true } };
+    } catch (error) {
+        console.error("Error updating form status:", error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
+        return { success: false, error: "Failed to update form status" };
     }
 }
 
@@ -253,6 +305,64 @@ export async function getFormById(id: string): Promise<FormActionResponse> {
         return { success: true, data: formData as any };
     } catch (error) {
         console.error("Error fetching form:", error);
+        if (error instanceof Error) {
+            return { success: false, error: error.message };
+        }
+        return { success: false, error: "Failed to fetch form" };
+    }
+}
+
+/**
+ * Get a single public form by ID (no auth required, but must be published)
+ */
+export async function getPublicFormById(id: string): Promise<FormActionResponse> {
+    try {
+        // Validate input
+        const validatedData = getFormSchema.parse({ id });
+
+        // Fetch form
+        const resultForm = await db
+            .select()
+            .from(form)
+            .where(eq(form.id, validatedData.id));
+
+        if (resultForm.length === 0) {
+            return { success: false, error: "Form not found" };
+        }
+
+        // Check status - ONLY allow published forms
+        if (resultForm[0].status !== "published") {
+            return { success: false, error: "Form is not published" };
+        }
+
+        // Fetch questions
+        const resultQuestions = await db
+            .select()
+            .from(question)
+            .where(eq(question.formId, validatedData.id))
+            .orderBy(question.position);
+
+        const questions: Question[] = resultQuestions.map((q) => ({
+            id: q.id,
+            type: q.type as Question["type"],
+            label: q.label,
+            description: q.description || undefined,
+            placeholder: q.placeholder || undefined,
+            required: q.required,
+            options: (q.options as string[]) || undefined,
+            allowMultiple: q.allowMultiple || undefined,
+            ratingScale: q.ratingScale || undefined,
+            position: q.position,
+        }));
+
+        const formData = {
+            ...resultForm[0],
+            questions,
+        };
+
+        return { success: true, data: formData as any };
+    } catch (error) {
+        console.error("Error fetching public form:", error);
         if (error instanceof Error) {
             return { success: false, error: error.message };
         }

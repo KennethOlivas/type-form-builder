@@ -38,6 +38,18 @@ interface BuilderHeaderProps {
   isNewForm: boolean;
 }
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { updateFormStatus } from "@/actions/form-actions";
+import { cn } from "@/lib/utils";
+
+// ... existing imports
+
 export const BuilderHeader = memo(function BuilderHeader({
   isNewForm,
   formId,
@@ -51,6 +63,8 @@ export const BuilderHeader = memo(function BuilderHeader({
     questions,
     formStyle,
     welcomeScreen,
+    status,
+    setStatus,
   } = useBuilderStore();
 
   const updateFormMutation = useUpdateForm();
@@ -189,6 +203,51 @@ export const BuilderHeader = memo(function BuilderHeader({
             <Eye className="w-4 h-4 mr-2" />
             Preview
           </Button>
+          <div className="flex items-center gap-2 mr-2">
+            <Select
+              value={status}
+              onValueChange={async (value: "published" | "draft" | "closed") => {
+                setStatus(value);
+                try {
+                  const result = await updateFormStatus(formId, value);
+                  if (result.success) {
+                    toast.success(`Form ${value}`);
+                  } else {
+                    toast.error(result.error);
+                  }
+                } catch (error) {
+                  toast.error("Failed to update status");
+                }
+              }}
+            >
+              <SelectTrigger>
+                <div className="flex items-center ">
+                  <SelectValue placeholder="Status" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="published">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    Published
+                  </div>
+                </SelectItem>
+                <SelectItem value="draft">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-gray-500" />
+                    Draft
+                  </div>
+                </SelectItem>
+                <SelectItem value="closed">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    Closed
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <Button onClick={saveForm} disabled={isSaving}>
             <Save className="w-4 h-4 mr-2" />
             {isSaving ? "Saving..." : "Save"}

@@ -99,6 +99,7 @@ export const form = pgTable("form", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
+  status: text("status").notNull().default("draft"), // 'published', 'draft', 'closed'
   style: jsonb("style").notNull(),
   welcomeScreen: jsonb("welcome_screen"),
   createdBy: text("created_by")

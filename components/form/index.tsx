@@ -18,11 +18,15 @@ import { useRouter } from "next/navigation"
 
 interface FormCProps {
   id: string
+  initialData?: any
 }
 
 
-export default function Form({ id }: FormCProps) {
-  const { data: formData, isLoading, notFound } = useFormData(id)
+export default function Form({ id, initialData }: FormCProps) {
+  const { data: fetchedData, isLoading: isFetching, notFound } = useFormData(id)
+
+  const formData = initialData || fetchedData
+  const isLoading = !initialData && isFetching
   const submitFormMutation = useSubmitForm()
   const router = useRouter()
 
@@ -119,7 +123,7 @@ export default function Form({ id }: FormCProps) {
       return
     }
     if (logicDestination) {
-      const targetIndex = questions.findIndex(q => q.id === logicDestination)
+      const targetIndex = questions.findIndex((q: Question) => q.id === logicDestination)
       if (targetIndex !== -1 && targetIndex > currentQuestionIndex) {
         setDirection(1)
         setCurrentQuestionIndex(targetIndex)

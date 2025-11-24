@@ -35,6 +35,7 @@ export interface DbForm {
     id: string;
     title: string;
     description: string;
+    status: "published" | "draft" | "closed";
     style: FormStyle;
     welcomeScreen: WelcomeScreen | null;
     createdBy: string;

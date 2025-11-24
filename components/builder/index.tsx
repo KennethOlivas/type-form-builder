@@ -44,6 +44,7 @@ export function Builder({ id, isNewForm }: BuilderProps) {
       initializeForm({
         title: formData.title,
         description: formData.description,
+        status: formData.status,
         questions: formData.questions,
         style: formData.style,
         welcomeScreen: formData.welcomeScreen,
@@ -71,7 +72,7 @@ export function Builder({ id, isNewForm }: BuilderProps) {
             id: id,
             title: formTitle,
             description: formDescription,
-            questions,
+            questions: questions.map((q, index) => ({ ...q, position: index })),
             style: formStyle,
             welcomeScreen,
           });

@@ -19,6 +19,8 @@ interface BuilderState {
   leftPanelCollapsed: boolean;
   rightPanelCollapsed: boolean;
   isInitialized: boolean;
+  status: "published" | "draft" | "closed";
+  setStatus: (status: "published" | "draft" | "closed") => void;
   setFormTitle: (title: string) => void;
   setFormDescription: (description: string) => void;
   setQuestions: (questions: Question[]) => void;
@@ -33,6 +35,7 @@ interface BuilderState {
   initializeForm: (data: {
     title: string;
     description: string;
+    status: "published" | "draft" | "closed";
     questions: Question[];
     style?: FormStyle;
     welcomeScreen?: WelcomeScreen;
@@ -55,6 +58,7 @@ interface BuilderState {
 const initialState = {
   formTitle: "Untitled Form",
   formDescription: "",
+  status: "draft" as const,
   questions: [],
   formStyle: {
     backgroundColor: "#1f2937",
@@ -88,6 +92,7 @@ const initialState = {
 export const useBuilderStore = create<BuilderState>((set, get) => ({
   ...initialState,
 
+  setStatus: (status) => set({ status }),
   setFormTitle: (title) => set({ formTitle: title }),
   setFormDescription: (description) => set({ formDescription: description }),
   setQuestions: (questions) => set({ questions }),
@@ -108,6 +113,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       set({
         formTitle: data.title,
         formDescription: data.description,
+        status: data.status,
         questions: data.questions,
         formStyle: data.style || initialState.formStyle,
         welcomeScreen: data.welcomeScreen || initialState.welcomeScreen,
