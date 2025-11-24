@@ -27,11 +27,13 @@ interface Form {
 interface DashboardContentProps {
     forms: Form[];
     activeWorkspaceId?: string;
+    hasWorkspace?: boolean;
 }
 
 export function DashboardContent({
     forms,
     activeWorkspaceId,
+    hasWorkspace = true,
 }: DashboardContentProps) {
     const deleteFormMutation = useDeleteForm();
     const duplicateFormMutation = useDuplicateForm();
@@ -110,6 +112,7 @@ export function DashboardContent({
             <DashboardHeader
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
+                hasWorkspace={hasWorkspace}
             />
 
             <main className="flex-1 overflow-auto p-6">
@@ -171,7 +174,7 @@ export function DashboardContent({
                                     </motion.div>
                                 ))}
 
-                                {view === "grid" && (
+                                {view === "grid" && hasWorkspace && (
                                     <motion.div
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}

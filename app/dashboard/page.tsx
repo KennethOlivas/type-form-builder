@@ -1,10 +1,10 @@
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { DashboardContent } from "@/components/dashboard/dashboard-content";
 import { db } from "@/db";
 import { form, submission, workspaceForm } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { eq, count, getTableColumns } from "drizzle-orm";
+import { eq, count, getTableColumns, and } from "drizzle-orm";
 import { headers } from "next/headers";
+import { getWorkspaces } from "@/lib/workspace-actions";
 
 export default async function DashboardPage({
   searchParams,
@@ -23,6 +23,10 @@ export default async function DashboardPage({
   const userId = user.user.id;
   const params = await searchParams;
   const activeWorkspaceId = params.workspace;
+
+  // Check if user has workspaces
+  const workspaces = await getWorkspaces();
+  const hasWorkspace = workspaces.length > 0;
 
   // Fetch all forms with response counts
   let formsQuery = db
@@ -46,8 +50,12 @@ export default async function DashboardPage({
       .from(form)
       .innerJoin(workspaceForm, eq(form.id, workspaceForm.formId))
       .leftJoin(submission, eq(form.id, submission.formId))
-      .where(eq(form.createdBy, userId))
-      .where(eq(workspaceForm.workspaceId, activeWorkspaceId))
+      .where(
+        and(
+          eq(form.createdBy, userId),
+          eq(workspaceForm.workspaceId, activeWorkspaceId)
+        )
+      )
       .groupBy(form.id)
       .$dynamic();
   }
@@ -56,7 +64,12 @@ export default async function DashboardPage({
 
   return (
     <>
-      <DashboardContent forms={forms} activeWorkspaceId={activeWorkspaceId} />
+      <DashboardContent
+        forms={forms}
+        activeWorkspaceId={activeWorkspaceId}
+        hasWorkspace={hasWorkspace}
+      />
     </>
   );
 }
+

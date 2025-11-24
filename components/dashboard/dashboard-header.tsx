@@ -11,9 +11,10 @@ import { ThemeToggle } from "../theme-toggle";
 interface DashboardHeaderProps {
     searchQuery: string;
     onSearchChange: (query: string) => void;
+    hasWorkspace?: boolean;
 }
 
-export function DashboardHeader({ searchQuery, onSearchChange }: DashboardHeaderProps) {
+export function DashboardHeader({ searchQuery, onSearchChange, hasWorkspace = true }: DashboardHeaderProps) {
     return (
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <SidebarTrigger className="-ml-2" />
@@ -30,12 +31,19 @@ export function DashboardHeader({ searchQuery, onSearchChange }: DashboardHeader
                 </div>
             </div>
             <div className="flex items-center gap-4">
-                <Link href="/builder/new">
-                    <Button>
+                {hasWorkspace ? (
+                    <Link href="/builder/new">
+                        <Button>
+                            <Plus className="mr-2 h-4 w-4" />
+                            Create New Form
+                        </Button>
+                    </Link>
+                ) : (
+                    <Button disabled title="Create a workspace first to start creating forms">
                         <Plus className="mr-2 h-4 w-4" />
                         Create New Form
                     </Button>
-                </Link>
+                )}
                 <div className="h-8 w-px bg-border" />
                 <ThemeToggle />
                 <ProfileMenu />

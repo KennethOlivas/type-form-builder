@@ -10,7 +10,6 @@ import {
     Trash2,
     FileText,
 } from "lucide-react";
-
 import {
     Sidebar,
     SidebarContent,
@@ -52,7 +51,7 @@ import {
     deleteWorkspace,
 } from "@/lib/workspace-actions";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Workspace {
     id: string;
@@ -66,19 +65,13 @@ interface Workspace {
 
 interface AppSidebarProps {
     workspaces: Workspace[];
-    activeWorkspaceId?: string | null;
-    onWorkspaceChange?: (id: string) => void;
 }
 
-export function AppSidebar({
-    workspaces,
-    activeWorkspaceId: initialActiveWorkspaceId,
-    onWorkspaceChange,
-}: AppSidebarProps) {
+export function AppSidebar({ workspaces }: AppSidebarProps) {
     const router = useRouter();
-    const [activeWorkspaceId, setActiveWorkspaceId] = React.useState<
-        string | null
-    >(initialActiveWorkspaceId || null);
+    const searchParams = useSearchParams();
+    const activeWorkspaceId = searchParams.get("workspace");
+
     const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
     const [newWorkspaceName, setNewWorkspaceName] = React.useState("");
     const [editingWorkspace, setEditingWorkspace] = React.useState<{
@@ -89,18 +82,8 @@ export function AppSidebar({
     const [isUpdating, setIsUpdating] = React.useState(false);
     const [isDeleting, setIsDeleting] = React.useState(false);
 
-    // Set active workspace to first one by default
-    React.useEffect(() => {
-        if (workspaces.length > 0 && !activeWorkspaceId) {
-            setActiveWorkspaceId(workspaces[0].id);
-        }
-    }, [workspaces, activeWorkspaceId]);
-
     const handleWorkspaceClick = (id: string) => {
-        setActiveWorkspaceId(id);
-        if (onWorkspaceChange) {
-            onWorkspaceChange(id);
-        }
+        router.push(`/dashboard?workspace=${id}`);
     };
 
     const handleCreateWorkspace = async () => {
@@ -143,9 +126,10 @@ export function AppSidebar({
             await deleteWorkspace(id);
             toast.success("Workspace deleted successfully");
             if (activeWorkspaceId === id) {
-                setActiveWorkspaceId(null);
+                router.push("/dashboard");
+            } else {
+                router.refresh();
             }
-            router.refresh();
         } catch (error) {
             toast.error("Failed to delete workspace");
         } finally {
