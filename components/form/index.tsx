@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { LocalDataService, type Question } from "@/lib/local-data-service"
 import { useFormData, useSubmitForm } from "@/hooks/use-forms"
+import { trackFormEvent } from "@/actions/analytics-actions"
 import { FormLoading } from "@/components/form/form-loading"
 
 import { WelcomeScreen } from "@/components/form/welcome-screen"
@@ -58,13 +59,10 @@ export default function Form({ id }: FormCProps) {
     // Track View
     const trackView = async () => {
       try {
-        const res = await fetch("/api/analytics/track", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ formId: id, event: "view" }),
-        })
-        const data = await res.json()
-        if (data.visitId) setVisitId(data.visitId)
+        const result = await trackFormEvent({ formId: id, event: "view" })
+        if (result.success && result.data.visitId) {
+          setVisitId(result.data.visitId)
+        }
       } catch (error) {
         console.error("Failed to track view", error)
       }
@@ -75,11 +73,7 @@ export default function Form({ id }: FormCProps) {
   const trackStart = async () => {
     if (!visitId) return
     try {
-      await fetch("/api/analytics/track", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formId: id, visitId, event: "start" }),
-      })
+      await trackFormEvent({ formId: id, visitId, event: "start" })
     } catch (error) {
       console.error("Failed to track start", error)
     }
@@ -88,11 +82,7 @@ export default function Form({ id }: FormCProps) {
   const trackProgress = async (questionId: string) => {
     if (!visitId) return
     try {
-      await fetch("/api/analytics/track", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formId: id, visitId, event: "progress", data: { questionId } }),
-      })
+      await trackFormEvent({ formId: id, visitId, event: "progress", data: { questionId } })
     } catch (error) {
       console.error("Failed to track progress", error)
     }
@@ -101,11 +91,7 @@ export default function Form({ id }: FormCProps) {
   const trackComplete = async () => {
     if (!visitId) return
     try {
-      await fetch("/api/analytics/track", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formId: id, visitId, event: "complete" }),
-      })
+      await trackFormEvent({ formId: id, visitId, event: "complete" })
     } catch (error) {
       console.error("Failed to track complete", error)
     }

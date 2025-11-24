@@ -1,74 +1,72 @@
+import { Suspense } from "react";
 import { DashboardContent } from "@/components/dashboard/dashboard-content";
-import { db } from "@/db";
-import { form, submission, workspaceForm } from "@/db/schema";
-import { auth } from "@/lib/auth";
-import { eq, count, getTableColumns, and } from "drizzle-orm";
-import { headers } from "next/headers";
+import { getForms } from "@/actions/form-actions";
 import { getWorkspaces } from "@/actions/workspace-actions";
+import { FormsSkeleton } from "@/components/skeletons/forms-skeleton";
+import { redirect } from "next/navigation";
+
+async function DashboardData({
+  activeWorkspaceId,
+}: {
+  activeWorkspaceId?: string;
+}) {
+  // Fetch workspaces
+  const workspaces = await getWorkspaces();
+  const hasWorkspace = workspaces.length > 0;
+
+  // Fetch forms
+  const formsResult = await getForms(activeWorkspaceId);
+
+  if (!formsResult.success) {
+    // Handle error - could show error UI
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-destructive">Error loading forms: {formsResult.error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <DashboardContent
+      forms={formsResult.data}
+      activeWorkspaceId={activeWorkspaceId}
+      hasWorkspace={hasWorkspace}
+    />
+  );
+}
 
 export default async function DashboardPage({
   searchParams,
 }: {
   searchParams: Promise<{ workspace?: string }>;
 }) {
-  const headersList = await headers();
-  const user = await auth.api.getSession({
-    headers: headersList,
-  });
-
-  if (!user?.session) {
-    return <div>Unauthorized</div>;
-  }
-
-  const userId = user.user.id;
   const params = await searchParams;
   const activeWorkspaceId = params.workspace;
 
-  // Check if user has workspaces
-  const workspaces = await getWorkspaces();
-  const hasWorkspace = workspaces.length > 0;
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardData activeWorkspaceId={activeWorkspaceId} />
+    </Suspense>
+  );
+}
 
-  // Fetch all forms with response counts
-  let formsQuery = db
-    .select({
-      ...getTableColumns(form),
-      responses: count(submission.id),
-    })
-    .from(form)
-    .leftJoin(submission, eq(form.id, submission.formId))
-    .where(eq(form.createdBy, userId))
-    .groupBy(form.id)
-    .$dynamic();
-
-  // If a workspace is selected, join with workspaceForm to filter
-  if (activeWorkspaceId) {
-    formsQuery = db
-      .select({
-        ...getTableColumns(form),
-        responses: count(submission.id),
-      })
-      .from(form)
-      .innerJoin(workspaceForm, eq(form.id, workspaceForm.formId))
-      .leftJoin(submission, eq(form.id, submission.formId))
-      .where(
-        and(
-          eq(form.createdBy, userId),
-          eq(workspaceForm.workspaceId, activeWorkspaceId)
-        )
-      )
-      .groupBy(form.id)
-      .$dynamic();
-  }
-
-  const forms = await formsQuery;
-
+function DashboardSkeleton() {
   return (
     <>
-      <DashboardContent
-        forms={forms}
-        activeWorkspaceId={activeWorkspaceId}
-        hasWorkspace={hasWorkspace}
-      />
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex h-16 items-center px-6">
+          <div className="flex-1" />
+        </div>
+      </div>
+      <main className="flex-1 overflow-auto p-6">
+        <div className="mx-auto max-w-7xl space-y-6">
+          <div>
+            <div className="h-9 w-48 bg-muted animate-pulse rounded mb-2" />
+            <div className="h-5 w-96 bg-muted animate-pulse rounded" />
+          </div>
+          <FormsSkeleton />
+        </div>
+      </main>
     </>
   );
 }

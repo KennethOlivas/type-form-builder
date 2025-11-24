@@ -1,67 +1,56 @@
-import { useState, useCallback, useSyncExternalStore } from "react";
-import { LocalDataService, type Form } from "@/lib/local-data-service";
+import { useState, useCallback, useEffect } from "react";
+import {
+  createForm,
+  updateForm,
+  deleteForm,
+  getFormById
+} from "@/actions/form-actions";
+import { submitForm } from "@/actions/submission-actions";
+import type { CreateFormInput, UpdateFormInput } from "@/lib/types/db";
+import type { Form } from "@/lib/local-data-service";
+import { useRouter } from "next/navigation";
 
-// Custom event for form data changes
-export const FORMS_UPDATED_EVENT = "formsUpdated";
+// ============================================================================
+// Form CRUD Hooks
+// ============================================================================
 
-function dispatchFormsUpdate() {
-  window.dispatchEvent(new CustomEvent(FORMS_UPDATED_EVENT));
-}
+/**
+ * Hook to create a new form using server actions
+ */
+export function useCreateForm() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-// Forms List Hook
-export function useFormsList() {
-  const [data, setData] = useState<Form[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const mutate = useCallback(
+    async (formData: CreateFormInput) => {
+      setIsLoading(true);
+      try {
+        const result = await createForm(formData);
 
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch("/api/form", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!res.ok) {
-        throw new Error("Failed to fetch forms");
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
+        router.refresh();
+        return result.data;
+      } catch (error) {
+        console.error("Error creating form:", error);
+        throw error;
+      } finally {
+        setIsLoading(false);
       }
-      const forms = await res.json();
-      console.log("Fetched forms:", forms);
-      setData(forms.forms);
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useSyncExternalStore(
-    useCallback(
-      (onStoreChange) => {
-        fetchData().then(onStoreChange);
-        const handler = () => {
-          fetchData().then(onStoreChange);
-        };
-        window.addEventListener(FORMS_UPDATED_EVENT, handler);
-        return () => window.removeEventListener(FORMS_UPDATED_EVENT, handler);
-      },
-      [fetchData],
-    ),
-    () => data,
-    () => data,
+    },
+    [router]
   );
 
-  const refetch = useCallback(() => {
-    fetchData();
-  }, [fetchData]);
-
-  return { data, isLoading, error, refetch };
+  return { mutate, isLoading };
 }
 
-// Single Form Hook
+/**
+ * Hook to fetch a single form by ID
+ */
 export function useFormData(formId: string) {
-  const [data, setData] = useState<Form | null>(null);
+  const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -75,20 +64,17 @@ export function useFormData(formId: string) {
     setIsLoading(true);
     try {
       setNotFound(false);
-      const res = await fetch(`/api/form/${formId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.status === 404) {
-        setNotFound(true);
-        setData(null);
-      } else if (!res.ok) {
-        throw new Error("Failed to fetch form");
+      const result = await getFormById(formId);
+
+      if (!result.success) {
+        if (result.error === "Form not found") {
+          setNotFound(true);
+          setData(null);
+        } else {
+          throw new Error(result.error);
+        }
       } else {
-        const formData = await res.json();
-        setData(formData);
+        setData(result.data);
       }
     } catch (err) {
       setError(err as Error);
@@ -97,25 +83,10 @@ export function useFormData(formId: string) {
     }
   }, [formId]);
 
-  // Initial fetch
-  useSyncExternalStore(
-    useCallback(
-      (onStoreChange) => {
-        fetchData().then(onStoreChange);
-        const handler = (e: Event) => {
-          const customEvent = e as CustomEvent;
-          if (!customEvent.detail || customEvent.detail === formId) {
-            fetchData().then(onStoreChange);
-          }
-        };
-        window.addEventListener(FORMS_UPDATED_EVENT, handler);
-        return () => window.removeEventListener(FORMS_UPDATED_EVENT, handler);
-      },
-      [fetchData, formId],
-    ),
-    () => data,
-    () => data,
-  );
+  // Fetch on mount
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const refetch = useCallback(() => {
     fetchData();
@@ -124,152 +95,134 @@ export function useFormData(formId: string) {
   return { data, isLoading, error, notFound, refetch };
 }
 
-// Create Form Action
-export function useCreateForm() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const mutate = useCallback(
-    async (form: Omit<Form, "id" | "createdAt" | "updatedAt">) => {
-      setIsLoading(true);
-      try {
-        // const newForm = LocalDataService.createForm(form);
-        const res = await fetch("/api/form", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ formData: form }),
-        });
-        dispatchFormsUpdate();
-        setIsLoading(false);
-        return res.json();
-      } catch (error) {
-        setIsLoading(false);
-        throw error;
-      }
-    },
-    [],
-  );
-
-  return { mutate, isLoading };
-}
-
-// Update Form Action
+/**
+ * Hook to update an existing form
+ */
 export function useUpdateForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const mutate = useCallback(
-    async ({ id, ...updates }: { id: string } & Partial<Form>) => {
+    async (formData: UpdateFormInput) => {
       setIsLoading(true);
       try {
-        const res = await fetch(`/api/form/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ formData: {
-            id, ...updates
-          } }),
-        });
-        if (!res.ok) {
-          throw new Error("Failed to update form");
+        const result = await updateForm(formData);
+
+        if (!result.success) {
+          throw new Error(result.error);
         }
-        dispatchFormsUpdate();
-        window.dispatchEvent(
-          new CustomEvent(FORMS_UPDATED_EVENT, { detail: id }),
-        );
-        setIsLoading(false);
-        return await res.json();
+
+        router.refresh();
+        return result.data;
       } catch (error) {
-        setIsLoading(false);
+        console.error("Error updating form:", error);
         throw error;
+      } finally {
+        setIsLoading(false);
       }
     },
-    [],
+    [router]
   );
 
   return { mutate, isLoading };
 }
 
-// Delete Form Action
+/**
+ * Hook to delete a form
+ */
 export function useDeleteForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const mutate = useCallback(async (formId: string) => {
-    setIsLoading(true);
-    try {
-      await fetch(`/api/form/${formId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      dispatchFormsUpdate();
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      throw error;
-    }
-  }, []);
+  const mutate = useCallback(
+    async (formId: string) => {
+      setIsLoading(true);
+      try {
+        const result = await deleteForm(formId);
+
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
+        router.refresh();
+        return result.data;
+      } catch (error) {
+        console.error("Error deleting form:", error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [router]
+  );
 
   return { mutate, isLoading };
 }
 
-// Duplicate Form Action
+/**
+ * Hook to duplicate a form
+ * Note: This creates a copy by fetching the original and creating a new one
+ */
 export function useDuplicateForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const mutate = useCallback(async (formId: string) => {
-    setIsLoading(true);
-    try {
-      const duplicatedForm = LocalDataService.duplicateForm(formId);
-      dispatchFormsUpdate();
-      setIsLoading(false);
-      return duplicatedForm;
-    } catch (error) {
-      setIsLoading(false);
-      throw error;
-    }
-  }, []);
+  const mutate = useCallback(
+    async (formId: string) => {
+      setIsLoading(true);
+      try {
+        // Fetch the original form
+        const originalResult = await getFormById(formId);
+
+        if (!originalResult.success) {
+          throw new Error(originalResult.error);
+        }
+
+        const original = originalResult.data;
+
+        // Create a duplicate
+        const duplicateData: CreateFormInput = {
+          title: `${original.title} (Copy)`,
+          description: original.description,
+          style: original.style as any,
+          welcomeScreen: original.welcomeScreen as any,
+          questions: original.questions.map((q) => ({
+            type: q.type,
+            label: q.label,
+            description: q.description,
+            placeholder: q.placeholder,
+            required: q.required,
+            options: q.options,
+            allowMultiple: q.allowMultiple,
+            ratingScale: q.ratingScale,
+            position: q.position,
+          })),
+        };
+
+        const result = await createForm(duplicateData);
+
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
+        router.refresh();
+        return result.data;
+      } catch (error) {
+        console.error("Error duplicating form:", error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [router]
+  );
 
   return { mutate, isLoading };
 }
 
-// Submissions Hook
-export function useSubmissions(formId: string) {
-  const subscribe = useCallback(
-    (onStoreChange: () => void) => {
-      const handler = (e: Event) => {
-        const customEvent = e as CustomEvent;
-        if (!customEvent.detail || customEvent.detail === formId) {
-          onStoreChange();
-        }
-      };
-      window.addEventListener(FORMS_UPDATED_EVENT, handler);
-      return () => window.removeEventListener(FORMS_UPDATED_EVENT, handler);
-    },
-    [formId],
-  );
-
-  const data = useSyncExternalStore<
-    ReturnType<typeof LocalDataService.getSubmissions>
-  >(
-    subscribe,
-    () => (formId ? LocalDataService.getSubmissions(formId) : []),
-    () => (formId ? LocalDataService.getSubmissions(formId) : []),
-  );
-
-  const isLoading = false;
-  const refetch = useCallback(() => {
-    window.dispatchEvent(
-      new CustomEvent(FORMS_UPDATED_EVENT, { detail: formId }),
-    );
-  }, [formId]);
-
-  return { data, isLoading, refetch };
-}
-
-// Submit Form Action
+/**
+ * Hook to submit a form (public - no auth)
+ */
 export function useSubmitForm() {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -283,23 +236,21 @@ export function useSubmitForm() {
     }) => {
       setIsLoading(true);
       try {
-        const submission = await fetch(`/api/submit/${formId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ answers }),
-        });
-        
-        dispatchFormsUpdate();
-        setIsLoading(false);
-        return submission;
+        const result = await submitForm({ formId, answers });
+
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
+        return result.data;
       } catch (error) {
-        setIsLoading(false);
+        console.error("Error submitting form:", error);
         throw error;
+      } finally {
+        setIsLoading(false);
       }
     },
-    [],
+    []
   );
 
   return { mutate, isLoading };
