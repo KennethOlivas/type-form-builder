@@ -18,6 +18,7 @@ export interface Question {
   options?: string[];
   allowMultiple?: boolean;
   ratingScale?: number;
+  position?: number;
   logic?: LogicJump; // Added logic jumps property
 }
 

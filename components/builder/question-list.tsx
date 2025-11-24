@@ -119,7 +119,7 @@ export const QuestionList = memo(function QuestionList({
         id: formId,
         title: formTitle,
         description: formDescription,
-        questions: updatedQuestions,
+        questions: updatedQuestions.map((q, i) => ({ ...q, position: i })),
         style: formStyle,
         welcomeScreen,
       });
@@ -178,9 +178,9 @@ export const QuestionList = memo(function QuestionList({
                   index={0}
                   isSelected={false}
                   isCompact={rightPanelCollapsed}
-                  onSelect={() => {}}
-                  onUpdate={() => {}}
-                  onDelete={() => {}}
+                  onSelect={() => { }}
+                  onUpdate={() => { }}
+                  onDelete={() => { }}
                   isDragging={true}
                 />
               </div>
