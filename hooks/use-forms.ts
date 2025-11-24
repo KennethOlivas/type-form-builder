@@ -283,7 +283,14 @@ export function useSubmitForm() {
     }) => {
       setIsLoading(true);
       try {
-        const submission = LocalDataService.createSubmission(formId, answers);
+        const submission = await fetch(`/api/submit/${formId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ answers }),
+        });
+        
         dispatchFormsUpdate();
         setIsLoading(false);
         return submission;

@@ -87,6 +87,8 @@ export default function Form({ id }: FormCProps) {
   const handleSubmit = () => {
     const currentAnswer = answers[currentQuestion.id]
     if (currentQuestion.required && !currentAnswer) return
+    //TODO: add location gps country and platform to answers
+
     submitFormMutation.mutate({ formId: id, answers })
     setIsSubmitted(true)
   }
