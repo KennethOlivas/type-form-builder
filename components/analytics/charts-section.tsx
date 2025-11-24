@@ -33,7 +33,7 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"]
 
 export function ChartsSection({ charts, questionAnalysis, questions }: ChartsSectionProps) {
     return (
-        <Tabs defaultValue="overview" className="space-y-4">
+        <Tabs fullWidth  defaultValue="overview" className="space-y-4">
             <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="questions">Question Analysis</TabsTrigger>
@@ -118,7 +118,7 @@ export function ChartsSection({ charts, questionAnalysis, questions }: ChartsSec
                     </Card>
                 </div>
 
-                <Card>
+                <Card className="mt-4">
                     <CardHeader>
                         <CardTitle>Drop-off Funnel</CardTitle>
                         <CardDescription>User retention through form steps</CardDescription>

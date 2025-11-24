@@ -77,7 +77,7 @@ export const MobileSheets = memo(function MobileSheets({
             )}
           </SheetHeader>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
+          <Tabs fullWidth value={activeTab} onValueChange={setActiveTab} className="mt-4">
             <TabsList className="grid w-full grid-cols-2 bg-gray-800/50">
               <TabsTrigger
                 value="settings"

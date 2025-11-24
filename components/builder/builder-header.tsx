@@ -234,7 +234,7 @@ export const BuilderHeader = memo(function BuilderHeader({
               Analytics
             </Button>
 
-            <Tabs defaultValue="welcome" className="w-full">
+            <Tabs fullWidth defaultValue="welcome" className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-gray-800/50">
                 <TabsTrigger
                   value="welcome"

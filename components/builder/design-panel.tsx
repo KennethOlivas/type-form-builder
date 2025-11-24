@@ -204,7 +204,7 @@ export function DesignPanel() {
         </p>
       </div>
 
-      <Tabs defaultValue="presets" className="w-full">
+      <Tabs fullWidth defaultValue="presets" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="presets">Presets</TabsTrigger>
           <TabsTrigger value="custom">Custom</TabsTrigger>

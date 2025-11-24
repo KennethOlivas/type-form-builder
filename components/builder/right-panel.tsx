@@ -87,7 +87,7 @@ export const RightPanel = memo(function RightPanel() {
       </div>
 
       <div className="shrink-0">
-        <Tabs defaultValue="settings">
+        <Tabs fullWidth defaultValue="settings" >
           <TabsList className="w-full mt-2">
             <TabsTrigger value="settings">
               <Settings className="w-4 h-4" />
