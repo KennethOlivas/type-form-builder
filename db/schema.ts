@@ -69,6 +69,32 @@ export const verification = pgTable("verification", {
     .notNull(),
 });
 
+export const workspace = pgTable("workspace", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  icon: text("icon").notNull().default("folder"),
+  type: text("type").notNull().default("personal"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const workspaceForm = pgTable("workspace_form", {
+  id: text("id").primaryKey(),
+  workspaceId: text("workspace_id")
+    .notNull()
+    .references(() => workspace.id, { onDelete: "cascade" }),
+  formId: text("form_id")
+    .notNull()
+    .references(() => form.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const form = pgTable("form", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
