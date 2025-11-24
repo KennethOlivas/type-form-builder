@@ -64,10 +64,16 @@ export const BuilderHeader = memo(function BuilderHeader({
   const isSaving = updateFormMutation.isLoading || createFormMutation.isLoading;
 
   const saveForm = async () => {
-    const formDataToSave: Omit<Form, "id" | "createdAt" | "updatedAt"> = {
+    // Add position property to questions based on their array index
+    const questionsWithPosition = questions.map((q, index) => ({
+      ...q,
+      position: index,
+    }));
+
+    const formDataToSave = {
       title: formTitle,
       description: formDescription,
-      questions,
+      questions: questionsWithPosition,
       style: formStyle,
       welcomeScreen,
     };
@@ -77,12 +83,12 @@ export const BuilderHeader = memo(function BuilderHeader({
         const result = await createFormMutation.mutate(formDataToSave);
         console.log("Created form:", result);
         toast.success("Form created");
-        router.push(`/builder/${result.formId}`);
+        router.push(`/builder/${result.id}`);
       } else {
-        const formToUpdate:  Omit<Form, "createdAt" | "updatedAt"> = {
+        const formToUpdate = {
           id: formId,
           ...formDataToSave,
-        }
+        };
         console.log("Updating form:", formToUpdate);
         await updateFormMutation.mutate(formToUpdate);
         toast.success("Form saved successfully");
@@ -90,7 +96,7 @@ export const BuilderHeader = memo(function BuilderHeader({
     } catch (error) {
       toast.error(
         "An error occurred while saving the form" +
-          (error instanceof Error ? `: ${error.message}` : ""),
+        (error instanceof Error ? `: ${error.message}` : ""),
       );
     }
   };
