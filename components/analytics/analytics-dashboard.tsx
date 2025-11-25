@@ -21,6 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { AnalyticsHeader } from "./analytics-header"
 import { motion } from "framer-motion"
 import { getAnalytics } from "@/actions"
+import { AnalyticsSkeleton } from "../skeletons/analytics-skeleton"
 
 interface AnalyticsDashboardProps {
     id: string
@@ -87,19 +88,7 @@ export function AnalyticsDashboard({ id }: AnalyticsDashboardProps) {
     }
 
     if (loading && !data) {
-        return <div className="p-8 space-y-8">
-            <div className="flex justify-between items-center">
-                <Skeleton className="h-10 w-48" />
-                <div className="flex gap-2">
-                    <Skeleton className="h-10 w-[260px]" />
-                    <Skeleton className="h-10 w-24" />
-                </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-32" />)}
-            </div>
-            <Skeleton className="h-[400px]" />
-        </div>
+        return <AnalyticsSkeleton />
     }
 
     if (!data) return <div className="p-8 text-center">Failed to load analytics</div>

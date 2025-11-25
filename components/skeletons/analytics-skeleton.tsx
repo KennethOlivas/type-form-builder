@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function AnalyticsSkeleton() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-7xl mx-auto">
             {/* Header Skeleton */}
             <div className="flex items-center justify-between">
                 <Skeleton className="h-8 w-64" />

@@ -283,7 +283,7 @@ export function ResponsesTable({ submissions, questions, refreshData }: Response
             </div>
 
             <Sheet open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-                <SheetContent className="w-[400px] sm:w-[600px] flex flex-col h-full">
+                <SheetContent className="flex flex-col h-full">
                     <SheetHeader className="border-b pb-4">
                         <SheetTitle className="flex items-center justify-between">
                             <span>Response Details</span>
@@ -321,10 +321,10 @@ export function ResponsesTable({ submissions, questions, refreshData }: Response
                         </SheetDescription>
                     </SheetHeader>
 
-                    <ScrollArea className="flex-1 -mx-6 px-6">
+                    <ScrollArea className="flex-1 mx-auto">
                         <div className="space-y-6 py-6">
                             {selectedSubmission && questions.map((q, index) => (
-                                <div key={q.id} className="bg-muted/30 p-4 rounded-lg border space-y-2">
+                                <div key={q.id} className="bg-muted/30 p-4 rounded-lg border space-y-2 mx-2">
                                     <div className="flex items-start gap-3">
                                         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
                                             {index + 1}
@@ -345,7 +345,7 @@ export function ResponsesTable({ submissions, questions, refreshData }: Response
                             ))}
 
                             {selectedSubmission && (
-                                <div className="border-t pt-6 mt-6 space-y-4">
+                                <div className="border-t pt-6 mt-6 space-y-4 px-4">
                                     <h4 className="font-semibold">Metadata</h4>
                                     <div className="grid grid-cols-2 gap-4 text-sm">
                                         <div>

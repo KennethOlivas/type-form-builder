@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowLeft, BarChart3 } from "lucide-react"
+import { ArrowLeft, BarChart3, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -32,6 +32,12 @@ export function AnalyticsHeader({ title, formId }: AnalyticsHeaderProps) {
             </div>
             <div className="flex items-center gap-2">
                 <ThemeToggle />
+                <Button variant="outline" asChild>
+                    <Link href={`/builder/${formId}`} >
+                        <Pencil className="h-4 w-4" />
+                        Edit Form
+                    </Link>
+                </Button>
                 <Button variant="outline" asChild>
                     <Link href={`/form/${formId}`} target="_blank">
                         View Form
