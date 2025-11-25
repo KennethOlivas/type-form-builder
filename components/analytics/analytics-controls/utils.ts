@@ -1,15 +1,16 @@
+import { AnalyticsResponse } from "@/lib/types/db"
 import { format } from "date-fns"
 import { DateRange } from "react-day-picker"
 
 /**
  * Converts analytics data to CSV format
  */
-export function convertToCSV(data: any): string {
+export function convertToCSV(data: AnalyticsResponse): string {
     if (!data.submissions) return ""
 
-    const headers = ["Submission ID", "Date", ...data.form.questions.map((q: any) => q.label)]
-    const rows = data.submissions.map((s: any) => {
-        const answers = data.form.questions.map((q: any) => {
+    const headers = ["Submission ID", "Date", ...data.form.questions.map((q) => q.label)]
+    const rows = data.submissions.map((s) => {
+        const answers = data.form.questions.map((q) => {
             const val = s.answers[q.id]
             if (Array.isArray(val)) return val.join("; ")
             return val || ""
@@ -19,7 +20,7 @@ export function convertToCSV(data: any): string {
 
     const csvContent = [
         headers.join(","),
-        ...rows.map((row: any[]) => row.map((cell: any) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+        ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
     ].join("\n")
 
     return csvContent

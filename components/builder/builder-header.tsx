@@ -21,9 +21,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { DesignPanel } from "./design-panel";
-// import { WelcomeScreenPanel } from "./welcome-screen-panel";
 import { useRouter } from "next/navigation";
 import { ShareFormModal } from "@/components/share-form-modal";
 import { DesignModal } from "./design-modal";
@@ -31,7 +28,6 @@ import { WelcomeModal } from "./welcome-modal";
 import { toast } from "sonner";
 import { useCreateForm, useUpdateForm } from "@/hooks/use-forms";
 import { ThemeToggle } from "../theme-toggle";
-import { Form } from "@/lib/local-data-service";
 
 interface BuilderHeaderProps {
   formId: string;

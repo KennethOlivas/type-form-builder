@@ -1,9 +1,9 @@
-import * as React from "react"
 import { subDays } from "date-fns"
 import { DateRange } from "react-day-picker"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useDebouncedCallback } from "use-debounce"
 import { DEFAULT_DATE_RANGE_DAYS, DEBOUNCE_DELAY } from "../constants"
+import { useCallback, useState } from "react"
 
 /**
  * Custom hook to manage date range state and URL synchronization
@@ -13,7 +13,7 @@ export function useDateRange() {
     const searchParams = useSearchParams()
 
     // Initialize state from URL params or default
-    const [date, setDate] = React.useState<DateRange | undefined>(() => {
+    const [date, setDate] = useState<DateRange | undefined>(() => {
         const fromParam = searchParams.get("from")
         const toParam = searchParams.get("to")
 
@@ -50,7 +50,7 @@ export function useDateRange() {
     }, DEBOUNCE_DELAY)
 
     // Handler for date selection
-    const handleDateSelect = React.useCallback((newDate: DateRange | undefined) => {
+    const handleDateSelect = useCallback((newDate: DateRange | undefined) => {
         setDate(newDate)
         updateSearchParams(newDate)
     }, [updateSearchParams])

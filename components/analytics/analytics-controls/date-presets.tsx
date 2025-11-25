@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import { DateRange } from "react-day-picker"
 import { DATE_PRESETS } from "./constants"
