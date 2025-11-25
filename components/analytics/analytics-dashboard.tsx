@@ -20,6 +20,7 @@ import { ResponsesTable } from "./responses-table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { AnalyticsHeader } from "./analytics-header"
 import { motion } from "framer-motion"
+import { getAnalytics } from "@/actions"
 
 interface AnalyticsDashboardProps {
     id: string
@@ -36,14 +37,13 @@ export function AnalyticsDashboard({ id }: AnalyticsDashboardProps) {
     const fetchData = React.useCallback(async () => {
         setLoading(true)
         try {
-            const params = new URLSearchParams()
-            if (date?.from) params.append("startDate", date.from.toISOString())
-            if (date?.to) params.append("endDate", date.to.toISOString())
-
-            const res = await fetch(`/api/analytics/${id}?${params.toString()}`)
-            if (!res.ok) throw new Error("Failed to fetch analytics")
-            const jsonData = await res.json()
-            setData(jsonData)
+            const res = await getAnalytics({
+                formId: id,
+                endDate: date?.to?.toISOString(),
+                startDate: date?.from?.toISOString()
+            })
+            if (!res.success) throw new Error("Failed to fetch analytics")
+            setData(res.data)
         } catch (error) {
             console.error(error)
         } finally {

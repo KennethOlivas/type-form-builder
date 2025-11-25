@@ -54,6 +54,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { deleteSubmission } from "@/actions"
 
 interface ResponsesTableProps {
     submissions: any[]
@@ -392,7 +393,7 @@ export function ResponsesTable({ submissions, questions, refreshData }: Response
                             onClick={async () => {
                                 if (deleteId) {
                                     try {
-                                        await fetch(`/api/submissions/${deleteId}`, { method: "DELETE" })
+                                        await deleteSubmission(deleteId)
                                         refreshData()
                                         setIsDetailsOpen(false)
                                         setSelectedSubmission(null)
