@@ -21,8 +21,6 @@ export function Builder({ id, isNewForm }: BuilderProps) {
   const { data: formData } = useFormData(id);
   const updateFormMutation = useUpdateForm();
 
-  // ...
-
   const {
     formTitle,
     formDescription,

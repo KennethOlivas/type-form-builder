@@ -19,6 +19,8 @@ import {
 import { Line, LineChart, ResponsiveContainer } from "recharts";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useDeleteForm, useDuplicateForm } from "@/hooks/use-forms";
+import { useRouter } from "next/navigation";
 
 interface FormCardProps {
     form: {
@@ -30,8 +32,6 @@ interface FormCardProps {
         views: number;
         completionRate: number;
     };
-    onDelete: (id: string) => void;
-    onDuplicate: (id: string) => void;
     onShare: (id: string) => void;
 }
 
@@ -48,10 +48,27 @@ const data = [
 
 export function FormCard({
     form,
-    onDelete,
-    onDuplicate,
     onShare,
 }: FormCardProps) {
+
+    const router = useRouter();
+
+    const deleteFormMutation = useDeleteForm();
+    const duplicateFormMutation = useDuplicateForm();
+
+    const handleDelete = () => {
+        deleteFormMutation.mutate(form.id);
+    };
+
+    const handleDuplicate = () => {
+        duplicateFormMutation.mutate(form.id);
+    };
+
+    const navigateToAnalytics = () => {
+        router.push(`/analytics/${form.id}`);
+    };
+
+
     const statusColors = {
         published: "bg-green-500/15 text-green-600 hover:bg-green-500/25",
         draft: "bg-gray-500/15 text-gray-600 hover:bg-gray-500/25",
@@ -59,7 +76,7 @@ export function FormCard({
     };
 
     return (
-        <Card className="group relative overflow-hidden transition-all hover:shadow-md border-border/50 bg-card/50 backdrop-blur-sm">
+        <Card className="group relative overflow-hidden transition-all duration-200 hover:shadow-md border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary">
             <div className="absolute top-3 right-3 z-10 opacity-0 transition-opacity group-hover:opacity-100">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -69,7 +86,11 @@ export function FormCard({
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem onClick={() => onDuplicate(form.id)}>
+                        <DropdownMenuItem onClick={navigateToAnalytics}>
+                            <Copy className="mr-2 h-4 w-4" />
+                            Analytics
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleDuplicate}>
                             <Copy className="mr-2 h-4 w-4" />
                             Duplicate
                         </DropdownMenuItem>
@@ -79,7 +100,7 @@ export function FormCard({
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                            onClick={() => onDelete(form.id)}
+                            onClick={handleDelete}
                             className="text-destructive focus:text-destructive"
                         >
                             <Trash2 className="mr-2 h-4 w-4" />
@@ -90,13 +111,13 @@ export function FormCard({
             </div>
 
             <Link href={`/builder/${form.id}`} className="block h-full">
-                <div className="aspect-[16/9] w-full bg-muted/30 p-4 transition-colors group-hover:bg-muted/50 flex items-center justify-center relative overflow-hidden">
+                <div className="aspect-video w-full bg-muted/30 p-4 transition-colors group-hover:bg-muted/50 flex items-center justify-center relative overflow-hidden">
                     {/* Abstract visual representation of the form */}
-                    <div className="w-3/4 h-3/4 bg-background rounded-lg shadow-sm p-3 opacity-80 group-hover:scale-105 transition-transform duration-300">
-                        <div className="h-2 w-1/3 bg-primary/20 rounded mb-2"></div>
-                        <div className="h-2 w-2/3 bg-muted rounded mb-4"></div>
+                    <div className="w-3/4 h-3/4 bg-background rounded-lg shadow-sm p-3 group-hover:scale-105 transition-transform duration-300 group-hover:animate-pulse " >
+                        <div className="h-2 w-1/3 bg-primary/30 rounded mb-2"></div>
+                        <div className="h-2 w-2/3 bg-muted/30 rounded mb-4"></div>
                         <div className="space-y-2">
-                            <div className="h-8 w-full border border-border rounded bg-muted/10"></div>
+                            <div className="h-8 w-full border border-border rounded bg-muted/40"></div>
                         </div>
                     </div>
 
@@ -129,20 +150,6 @@ export function FormCard({
                             <span className="font-medium text-foreground">{form.responses}</span>
                             <span>responses</span>
                         </div>
-                    </div>
-
-                    <div className="h-8 w-16">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={data}>
-                                <Line
-                                    type="monotone"
-                                    dataKey="value"
-                                    stroke="hsl(var(--primary))"
-                                    strokeWidth={2}
-                                    dot={false}
-                                />
-                            </LineChart>
-                        </ResponsiveContainer>
                     </div>
                 </CardFooter>
             </Link>

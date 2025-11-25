@@ -36,8 +36,6 @@ export function DashboardContent({
     activeWorkspaceId,
     hasWorkspace = true,
 }: DashboardContentProps) {
-    const deleteFormMutation = useDeleteForm();
-    const duplicateFormMutation = useDuplicateForm();
 
     const [shareModalOpen, setShareModalOpen] = useState(false);
     const [selectedForm, setSelectedForm] = useState<{
@@ -50,13 +48,6 @@ export function DashboardContent({
     const [sortOrder, setSortOrder] = useState("updated");
     const [view, setView] = useState<"grid" | "list">("grid");
 
-    const handleDelete = (id: string) => {
-        deleteFormMutation.mutate(id);
-    };
-
-    const handleDuplicate = (id: string) => {
-        duplicateFormMutation.mutate(id);
-    };
 
     const handleShare = (id: string, title: string) => {
         setSelectedForm({ id, title });
@@ -192,8 +183,6 @@ export function DashboardContent({
                                     >
                                         <FormCard
                                             form={form}
-                                            onDelete={handleDelete}
-                                            onDuplicate={handleDuplicate}
                                             onShare={() => handleShare(form.id, form.title)}
                                         />
                                     </motion.div>

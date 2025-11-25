@@ -14,6 +14,7 @@ import {
     Panel,
     useReactFlow,
     ReactFlowProvider,
+    Position,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import dagre from "dagre";
@@ -49,8 +50,8 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = "LR") => 
         const nodeWithPosition = dagreGraph.node(node.id);
         return {
             ...node,
-            targetPosition: isHorizontal ? "left" : "top",
-            sourcePosition: isHorizontal ? "right" : "bottom",
+            targetPosition: isHorizontal ? Position.Left : Position.Top,
+            sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
             position: {
                 x: nodeWithPosition.x - 110, // Half width
                 y: nodeWithPosition.y - 60,  // Half height
@@ -75,6 +76,7 @@ function LogicMapContent() {
             initialEdges
         );
         setEdges(layoutedEdges);
+        setNodes(layoutedNodes);
 
         // Fit view after a short delay to allow rendering
         setTimeout(() => fitView({ padding: 0.2 }), 50);
