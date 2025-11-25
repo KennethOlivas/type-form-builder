@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import DotGrid from "@/components/dot-grid";
+import DotGrid from "@/components/landing/dot-grid";
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
