@@ -47,6 +47,42 @@ export const questionTypeSchema = z.enum([
     "file-upload",
 ]);
 
+// ============================================================================
+// Logic Schema
+// ============================================================================
+export const logicRuleSchema = z.object({
+    id: z.string(),
+    operator: z.enum([
+        "is",
+        "is-not",
+        "contains",
+        "does-not-contain",
+        "starts-with",
+        "is-empty",
+        "is-not-empty",
+        "equals",
+        "not-equals",
+        "greater-than",
+        "less-than",
+        "between",
+    ]),
+    value: z.union([z.string(), z.number()]).optional(),
+    valueMax: z.number().optional(),
+    destinationType: z.enum(["next-question", "specific-question", "end-form"]),
+    destinationQuestionId: z.string().optional(),
+});
+
+export const logicJumpSchema = z.object({
+    enabled: z.boolean(),
+    rules: z.array(logicRuleSchema),
+    defaultDestinationType: z.enum([
+        "next-question",
+        "specific-question",
+        "end-form",
+    ]),
+    defaultDestinationQuestionId: z.string().optional(),
+});
+
 export const questionSchema = z.object({
     id: z.string().optional(), // Optional for creation
     type: questionTypeSchema,
@@ -58,6 +94,7 @@ export const questionSchema = z.object({
     allowMultiple: z.boolean().optional(),
     ratingScale: z.number().min(1).max(10).optional(),
     position: z.number().default(0),
+    logic: logicJumpSchema.optional(),
 });
 
 // ============================================================================

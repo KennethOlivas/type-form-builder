@@ -33,16 +33,18 @@ export function AnalyticsDashboard({ id }: AnalyticsDashboardProps) {
     })
     const [data, setData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
-
     const fetchData = React.useCallback(async () => {
         setLoading(true)
         try {
             const res = await getAnalytics({
                 formId: id,
+                startDate: date?.from?.toISOString(),
                 endDate: date?.to?.toISOString(),
-                startDate: date?.from?.toISOString()
             })
-            if (!res.success) throw new Error("Failed to fetch analytics")
+
+            if (!res.success) {
+                throw new Error(res.error)
+            }
             setData(res.data)
         } catch (error) {
             console.error(error)

@@ -9,6 +9,8 @@ import {
     submitFormSchema,
     trackEventSchema,
     analyticsDateRangeSchema,
+    logicRuleSchema,
+    logicJumpSchema,
 } from "@/lib/validations/schema";
 
 // ============================================================================
@@ -18,6 +20,8 @@ export type FormStyle = z.infer<typeof formStyleSchema>;
 export type WelcomeScreen = z.infer<typeof welcomeScreenSchema>;
 export type Question = z.infer<typeof questionSchema>;
 export type QuestionType = Question["type"];
+export type LogicRule = z.infer<typeof logicRuleSchema>;
+export type LogicJump = z.infer<typeof logicJumpSchema>;
 
 export type CreateFormInput = z.infer<typeof createFormSchema>;
 export type UpdateFormInput = z.infer<typeof updateFormSchema>;

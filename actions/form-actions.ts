@@ -1,9 +1,9 @@
 "use server";
 
 import { db } from "@/db";
-import { form, question, submission, workspace, workspaceForm } from "@/db/schema";
+import { form, question, submission, workspace, workspaceForm, logicJump, logicRule } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { eq, count, getTableColumns, and } from "drizzle-orm";
+import { eq, count, getTableColumns, and, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import {
@@ -20,6 +20,8 @@ import type {
     FormsActionResponse,
     ActionResponse,
     Question,
+    LogicJump,
+    LogicRule,
 } from "@/lib/types/db";
 
 // ============================================================================
@@ -284,6 +286,46 @@ export async function getFormById(id: string): Promise<FormActionResponse> {
             .where(eq(question.formId, validatedData.id))
             .orderBy(question.position);
 
+        // Fetch logic jumps
+        const questionIds = resultQuestions.map((q) => q.id);
+        let logicJumpsMap: Record<string, LogicJump> = {};
+
+        if (questionIds.length > 0) {
+            const jumps = await db
+                .select()
+                .from(logicJump)
+                .where(inArray(logicJump.questionId, questionIds));
+
+            if (jumps.length > 0) {
+                const jumpIds = jumps.map((j) => j.id);
+                const rules = await db
+                    .select()
+                    .from(logicRule)
+                    .where(inArray(logicRule.logicJumpId, jumpIds));
+
+                for (const jump of jumps) {
+                    const jumpRules = rules
+                        .filter((r) => r.logicJumpId === jump.id)
+                        .map((r) => ({
+                            id: r.id,
+                            operator: r.operator as LogicRule["operator"],
+                            value: r.value || undefined,
+                            valueMax: r.valueMax ? Number(r.valueMax) : undefined,
+                            destinationType: r.destinationType as LogicRule["destinationType"],
+                            destinationQuestionId: r.destinationQuestionId || undefined,
+                        }));
+
+                    logicJumpsMap[jump.questionId] = {
+                        enabled: jump.enabled,
+                        defaultDestinationType: jump.defaultDestinationType as LogicJump["defaultDestinationType"],
+                        defaultDestinationQuestionId:
+                            jump.defaultDestinationQuestionId || undefined,
+                        rules: jumpRules,
+                    };
+                }
+            }
+        }
+
         const questions: Question[] = resultQuestions.map((q) => ({
             id: q.id,
             type: q.type as Question["type"],
@@ -295,6 +337,7 @@ export async function getFormById(id: string): Promise<FormActionResponse> {
             allowMultiple: q.allowMultiple || undefined,
             ratingScale: q.ratingScale || undefined,
             position: q.position,
+            logic: logicJumpsMap[q.id] || undefined,
         }));
 
         const formData = {
@@ -342,6 +385,46 @@ export async function getPublicFormById(id: string): Promise<FormActionResponse>
             .where(eq(question.formId, validatedData.id))
             .orderBy(question.position);
 
+        // Fetch logic jumps
+        const questionIds = resultQuestions.map((q) => q.id);
+        let logicJumpsMap: Record<string, LogicJump> = {};
+
+        if (questionIds.length > 0) {
+            const jumps = await db
+                .select()
+                .from(logicJump)
+                .where(inArray(logicJump.questionId, questionIds));
+
+            if (jumps.length > 0) {
+                const jumpIds = jumps.map((j) => j.id);
+                const rules = await db
+                    .select()
+                    .from(logicRule)
+                    .where(inArray(logicRule.logicJumpId, jumpIds));
+
+                for (const jump of jumps) {
+                    const jumpRules = rules
+                        .filter((r) => r.logicJumpId === jump.id)
+                        .map((r) => ({
+                            id: r.id,
+                            operator: r.operator as LogicRule["operator"],
+                            value: r.value || undefined,
+                            valueMax: r.valueMax ? Number(r.valueMax) : undefined,
+                            destinationType: r.destinationType as LogicRule["destinationType"],
+                            destinationQuestionId: r.destinationQuestionId || undefined,
+                        }));
+
+                    logicJumpsMap[jump.questionId] = {
+                        enabled: jump.enabled,
+                        defaultDestinationType: jump.defaultDestinationType as LogicJump["defaultDestinationType"],
+                        defaultDestinationQuestionId:
+                            jump.defaultDestinationQuestionId || undefined,
+                        rules: jumpRules,
+                    };
+                }
+            }
+        }
+
         const questions: Question[] = resultQuestions.map((q) => ({
             id: q.id,
             type: q.type as Question["type"],
@@ -353,6 +436,7 @@ export async function getPublicFormById(id: string): Promise<FormActionResponse>
             allowMultiple: q.allowMultiple || undefined,
             ratingScale: q.ratingScale || undefined,
             position: q.position,
+            logic: logicJumpsMap[q.id] || undefined,
         }));
 
         const formData = {
@@ -417,7 +501,7 @@ export async function updateForm(
 
         await db.insert(question).values(
             validatedData.questions.map((q, index) => ({
-                id: crypto.randomUUID(),
+                id: q.id || crypto.randomUUID(),
                 formId: validatedData.id,
                 type: q.type,
                 label: q.label,
@@ -430,6 +514,35 @@ export async function updateForm(
                 position: index,
             }))
         );
+
+        // Insert Logic
+        for (const q of validatedData.questions) {
+            if (q.logic && q.logic.enabled && q.id) {
+                const logicJumpId = crypto.randomUUID();
+                await db.insert(logicJump).values({
+                    id: logicJumpId,
+                    questionId: q.id,
+                    enabled: q.logic.enabled,
+                    defaultDestinationType: q.logic.defaultDestinationType,
+                    defaultDestinationQuestionId:
+                        q.logic.defaultDestinationQuestionId || null,
+                });
+
+                if (q.logic.rules && q.logic.rules.length > 0) {
+                    await db.insert(logicRule).values(
+                        q.logic.rules.map((rule) => ({
+                            id: crypto.randomUUID(),
+                            logicJumpId: logicJumpId,
+                            operator: rule.operator,
+                            value: rule.value?.toString() || null,
+                            valueMax: rule.valueMax?.toString() || null,
+                            destinationType: rule.destinationType,
+                            destinationQuestionId: rule.destinationQuestionId || null,
+                        }))
+                    );
+                }
+            }
+        }
 
         // Fetch updated form
         const updatedForm = await getFormById(validatedData.id);
