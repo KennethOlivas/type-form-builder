@@ -74,7 +74,6 @@ function LogicMapContent() {
             initialNodes,
             initialEdges
         );
-        setNodes(layoutedNodes);
         setEdges(layoutedEdges);
 
         // Fit view after a short delay to allow rendering
@@ -86,7 +85,6 @@ function LogicMapContent() {
             nodes,
             edges
         );
-        setNodes([...layoutedNodes]);
         setEdges([...layoutedEdges]);
         fitView({ padding: 0.2 });
     }, [nodes, edges, setNodes, setEdges, fitView]);
@@ -143,7 +141,7 @@ function LogicMapContent() {
     const onEdgesDelete = useCallback(
         (deletedEdges: Edge[]) => {
             deletedEdges.forEach((edge) => {
-                const sourceQuestion = questions.find((q) => q.id === source);
+                const sourceQuestion = questions.find((q) => q.id === edge.source);
                 if (!sourceQuestion || !sourceQuestion.logic) return;
 
                 // Check if it's a default jump
