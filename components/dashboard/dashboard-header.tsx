@@ -3,7 +3,7 @@
 import { Search, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ProfileMenu } from "@/components/profile-menu";
+import { ProfileMenu } from "@/components/user/profile-menu";
 import Link from "next/link";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ThemeToggle } from "../theme-toggle";
@@ -16,7 +16,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ searchQuery, onSearchChange, hasWorkspace = true }: DashboardHeaderProps) {
     return (
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur supports-backdrop-filter:bg-background/60">
             <SidebarTrigger className="-ml-2" />
             <div className="flex flex-1 items-center gap-4">
                 <div className="relative w-full max-w-sm">

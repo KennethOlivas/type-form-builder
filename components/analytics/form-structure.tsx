@@ -1,9 +1,7 @@
-"use client"
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { CheckCircle2, Circle, List, Type, Calendar, Star, Upload, AlignLeft, Hash } from "lucide-react"
+import { Circle, List, Type, Calendar, Star, Upload, AlignLeft, Hash } from "lucide-react"
 
 interface FormStructureProps {
     questions: any[]

@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -55,6 +54,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { deleteSubmission } from "@/actions"
+import { useMemo, useState } from "react"
 
 interface ResponsesTableProps {
     submissions: any[]
@@ -63,19 +63,19 @@ interface ResponsesTableProps {
 }
 
 export function ResponsesTable({ submissions, questions, refreshData }: ResponsesTableProps) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = React.useState({})
-    const [globalFilter, setGlobalFilter] = React.useState("")
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = useState({})
+    const [globalFilter, setGlobalFilter] = useState("")
 
-    const [selectedSubmission, setSelectedSubmission] = React.useState<any>(null)
-    const [isDetailsOpen, setIsDetailsOpen] = React.useState(false)
-    const [deleteId, setDeleteId] = React.useState<string | null>(null)
-    const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
+    const [selectedSubmission, setSelectedSubmission] = useState<any>(null)
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+    const [deleteId, setDeleteId] = useState<string | null>(null)
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
     // Define columns dynamically
-    const columns: ColumnDef<any>[] = React.useMemo(() => {
+    const columns: ColumnDef<any>[] = useMemo(() => {
         const baseColumns: ColumnDef<any>[] = [
             {
                 accessorKey: "submittedAt",

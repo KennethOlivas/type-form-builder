@@ -1,5 +1,4 @@
 import LandingNavbar from "@/components/landing/navbar";
-import StickyNav from "@/components/landing/sticky-nav";
 import HeroSection from "@/components/landing/hero";
 import SocialProof from "@/components/landing/social-proof";
 import FeaturesSection from "@/components/landing/features";
@@ -10,9 +9,8 @@ import LandingFooter from "@/components/landing/footer";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white selection:bg-blue-500/30">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white selection:bg-primary">
       <LandingNavbar />
-      <StickyNav />
       <main>
         <HeroSection />
         <SocialProof />

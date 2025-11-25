@@ -232,7 +232,7 @@ export const BuilderHeader = memo(function BuilderHeader({
             <Eye className="w-4 h-4 mr-2" />
             Preview
           </Button>
-          <div className="flex items-center gap-2 mr-2 hidden lg:flex">
+          <div className="flex items-center gap-2 mr-2 lg:flex">
             <Select
               value={status}
               onValueChange={async (value: "published" | "draft" | "closed") => {
