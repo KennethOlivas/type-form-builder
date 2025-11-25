@@ -3,9 +3,10 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Clock, Users, ArrowRight } from "lucide-react"
+import type { WelcomeScreen } from "@/lib/types/db"
 
 interface WelcomeScreenProps {
-	welcomeScreen: any
+	welcomeScreen: WelcomeScreen
 	formStyle: { backgroundColor: string; textColor: string; buttonColor: string; buttonTextColor: string; borderRadius: number; fontFamily: string }
 	respondentCount: number
 	onStart: () => void
