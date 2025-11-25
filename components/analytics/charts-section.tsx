@@ -33,7 +33,7 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"]
 
 export function ChartsSection({ charts, questionAnalysis, questions }: ChartsSectionProps) {
     return (
-        <Tabs fullWidth  defaultValue="overview" className="space-y-4">
+        <Tabs fullWidth defaultValue="overview" className="space-y-4">
             <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="questions">Question Analysis</TabsTrigger>
@@ -153,66 +153,68 @@ export function ChartsSection({ charts, questionAnalysis, questions }: ChartsSec
                 </Card>
             </TabsContent>
 
-            <TabsContent value="questions" className="grid gap-4 md:grid-cols-2">
-                {questions.map((q) => {
-                    const analysis = questionAnalysis[q.id]
-                    if (!analysis) return null
+            <TabsContent value="questions">
+                <div className="grid gap-4 md:grid-cols-2">
+                    {questions.map((q) => {
+                        const analysis = questionAnalysis[q.id]
+                        if (!analysis) return null
 
-                    return (
-                        <Card key={q.id}>
-                            <CardHeader>
-                                <CardTitle className="text-base">{q.label}</CardTitle>
-                                <CardDescription className="text-xs truncate">{q.type}</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {analysis.type === "text" || analysis.type === "long_text" || analysis.type === "date" ? (
-                                    <div className="space-y-2">
-                                        <h4 className="text-sm font-semibold">Recent Answers:</h4>
-                                        <ul className="space-y-1">
-                                            {analysis.recent.length > 0 ? (
-                                                analysis.recent.map((ans: string, i: number) => (
-                                                    <li key={i} className="text-sm p-2 bg-muted rounded-md truncate">
-                                                        {ans}
-                                                    </li>
-                                                ))
+                        return (
+                            <Card key={q.id}>
+                                <CardHeader>
+                                    <CardTitle className="text-base">{q.label}</CardTitle>
+                                    <CardDescription className="text-xs truncate">{q.type}</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    {analysis.type === "text" || analysis.type === "long_text" || analysis.type === "date" ? (
+                                        <div className="space-y-2">
+                                            <h4 className="text-sm font-semibold">Recent Answers:</h4>
+                                            <ul className="space-y-1">
+                                                {analysis.recent.length > 0 ? (
+                                                    analysis.recent.map((ans: string, i: number) => (
+                                                        <li key={i} className="text-sm p-2 bg-muted rounded-md truncate">
+                                                            {ans}
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li className="text-sm text-muted-foreground">No answers yet</li>
+                                                )}
+                                            </ul>
+                                        </div>
+                                    ) : (
+                                        <div className="h-[200px]">
+                                            {analysis.counts && Object.keys(analysis.counts).length > 0 ? (
+                                                <ResponsiveContainer width="100%" height="100%">
+                                                    <BarChart data={Object.entries(analysis.counts).map(([name, value]) => ({ name, value }))}>
+                                                        <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
+                                                        <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
+                                                        <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                                                        <Tooltip
+                                                            cursor={{ fill: 'transparent' }}
+                                                            contentStyle={{ backgroundColor: "var(--background)", borderColor: "var(--border)" }}
+                                                            itemStyle={{ color: "var(--foreground)" }}
+                                                        />
+                                                        <Bar dataKey="value" fill="#8884d8" radius={[4, 4, 0, 0]} />
+                                                    </BarChart>
+                                                </ResponsiveContainer>
                                             ) : (
-                                                <li className="text-sm text-muted-foreground">No answers yet</li>
+                                                <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+                                                    No data available
+                                                </div>
                                             )}
-                                        </ul>
-                                    </div>
-                                ) : (
-                                    <div className="h-[200px]">
-                                        {analysis.counts && Object.keys(analysis.counts).length > 0 ? (
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <BarChart data={Object.entries(analysis.counts).map(([name, value]) => ({ name, value }))}>
-                                                    <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
-                                                    <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
-                                                    <YAxis fontSize={12} tickLine={false} axisLine={false} />
-                                                    <Tooltip
-                                                        cursor={{ fill: 'transparent' }}
-                                                        contentStyle={{ backgroundColor: "var(--background)", borderColor: "var(--border)" }}
-                                                        itemStyle={{ color: "var(--foreground)" }}
-                                                    />
-                                                    <Bar dataKey="value" fill="#8884d8" radius={[4, 4, 0, 0]} />
-                                                </BarChart>
-                                            </ResponsiveContainer>
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-                                                No data available
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                                {analysis.average !== undefined && (
-                                    <div className="mt-4 text-center">
-                                        <span className="text-2xl font-bold">{analysis.average.toFixed(1)}</span>
-                                        <span className="text-sm text-muted-foreground ml-2">Average Score</span>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    )
-                })}
+                                        </div>
+                                    )}
+                                    {analysis.average !== undefined && (
+                                        <div className="mt-4 text-center">
+                                            <span className="text-2xl font-bold">{analysis.average.toFixed(1)}</span>
+                                            <span className="text-sm text-muted-foreground ml-2">Average Score</span>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )
+                    })}
+                </div>
             </TabsContent>
             <TabsContent value="structure">
                 <FormStructure questions={questions} />

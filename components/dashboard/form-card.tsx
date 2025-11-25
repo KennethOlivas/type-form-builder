@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Edit, Copy, Trash2, Eye, Share } from "lucide-react";
+import { MoreHorizontal, Copy, Trash2, Share, BarChart3, } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,6 @@ import {
     CardFooter,
     CardHeader,
 } from "@/components/ui/card";
-import { Line, LineChart, ResponsiveContainer } from "recharts";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useDeleteForm, useDuplicateForm } from "@/hooks/use-forms";
@@ -87,7 +86,7 @@ export function FormCard({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
                         <DropdownMenuItem onClick={navigateToAnalytics}>
-                            <Copy className="mr-2 h-4 w-4" />
+                            <BarChart3 className="mr-2 h-4 w-4" />
                             Analytics
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={handleDuplicate}>
@@ -96,7 +95,7 @@ export function FormCard({
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => onShare(form.id)}>
                             <Share className="mr-2 h-4 w-4" />
-                            Copy Link
+                            Share
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -109,9 +108,8 @@ export function FormCard({
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-
             <Link href={`/builder/${form.id}`} className="block h-full">
-                <div className="aspect-video w-full bg-muted/30 p-4 transition-colors group-hover:bg-muted/50 flex items-center justify-center relative overflow-hidden">
+                <CardHeader className="aspect-video w-full bg-muted/30  transition-colors group-hover:bg-muted/50 flex items-center justify-center relative overflow-hidden">
                     {/* Abstract visual representation of the form */}
                     <div className="w-3/4 h-3/4 bg-background rounded-lg shadow-sm p-3 group-hover:scale-105 transition-transform duration-300 group-hover:animate-pulse " >
                         <div className="h-2 w-1/3 bg-primary/30 rounded mb-2"></div>
@@ -129,7 +127,7 @@ export function FormCard({
                             {form.status}
                         </Badge>
                     </div>
-                </div>
+                </CardHeader>
 
                 <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-4">
