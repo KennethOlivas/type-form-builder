@@ -3,9 +3,8 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
-import Link from "next/link";
-import { useDeleteForm, useDuplicateForm } from "@/hooks/use-forms";
 import { ShareFormModal } from "@/components/share-form-modal";
+import { CreateFormModal } from "@/components/dashboard/create-form-modal";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { DashboardToolbar } from "@/components/dashboard/dashboard-toolbar";
 import { FormCard } from "@/components/dashboard/form-card";
@@ -36,18 +35,17 @@ export function DashboardContent({
     activeWorkspaceId,
     hasWorkspace = true,
 }: DashboardContentProps) {
-
     const [shareModalOpen, setShareModalOpen] = useState(false);
     const [selectedForm, setSelectedForm] = useState<{
         id: string;
         title: string;
     } | null>(null);
+    const [createFormModalOpen, setCreateFormModalOpen] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [sortOrder, setSortOrder] = useState("updated");
     const [view, setView] = useState<"grid" | "list">("grid");
-
 
     const handleShare = (id: string, title: string) => {
         setSelectedForm({ id, title });
@@ -155,21 +153,22 @@ export function DashboardContent({
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: filteredAndSortedForms.length * 0.05 }}
                                     >
-                                        <Link href="/builder/new">
-                                            <Card className="group relative overflow-hidden transition-all h-full hover:shadow-md border-dashed border-2 hover:border-primary/50 bg-card/30 backdrop-blur-sm flex items-center justify-center cursor-pointer">
-                                                <div className="text-center space-y-4">
-                                                    <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                                                        <Plus className="w-6 h-6 text-primary" />
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="font-semibold">Create New Form</h3>
-                                                        <p className="text-sm text-muted-foreground mt-1">
-                                                            Start building your next form
-                                                        </p>
-                                                    </div>
+                                        <Card
+                                            className="group relative overflow-hidden transition-all h-full hover:shadow-md border-dashed border-2 hover:border-primary/50 bg-card/30 backdrop-blur-sm flex items-center justify-center cursor-pointer"
+                                            onClick={() => setCreateFormModalOpen(true)}
+                                        >
+                                            <div className="text-center space-y-4">
+                                                <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                                    <Plus className="w-6 h-6 text-primary" />
                                                 </div>
-                                            </Card>
-                                        </Link>
+                                                <div>
+                                                    <h3 className="font-semibold">Create New Form</h3>
+                                                    <p className="text-sm text-muted-foreground mt-1">
+                                                        Start building your next form
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </Card>
                                     </motion.div>
                                 )}
 
@@ -203,6 +202,11 @@ export function DashboardContent({
                     formTitle={selectedForm.title}
                 />
             )}
+
+            <CreateFormModal
+                open={createFormModalOpen}
+                onOpenChange={setCreateFormModalOpen}
+            />
         </>
     );
 }

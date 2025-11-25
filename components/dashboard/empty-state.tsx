@@ -16,7 +16,7 @@ export function EmptyState() {
     return (
         <div className="flex flex-col items-center justify-center min-h-[400px] p-8 text-center animate-in fade-in-50 zoom-in-95 duration-500">
             <div className="relative mb-6">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-full blur-xl opacity-50" />
+                <div className="absolute -inset-4 bg-linear-to-r from-primary/20 to-purple-500/20 rounded-full blur-xl opacity-50" />
                 <div className="relative bg-background p-4 rounded-full border shadow-sm">
                     <Sparkles className="h-12 w-12 text-primary" />
                 </div>
