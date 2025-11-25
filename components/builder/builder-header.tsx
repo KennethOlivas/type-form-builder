@@ -65,6 +65,8 @@ export const BuilderHeader = memo(function BuilderHeader({
     welcomeScreen,
     status,
     setStatus,
+    viewMode,
+    setViewMode,
   } = useBuilderStore();
 
   const updateFormMutation = useUpdateForm();
@@ -146,6 +148,33 @@ export const BuilderHeader = memo(function BuilderHeader({
               {formTitle}
             </h1>
           )}
+
+          <div className="h-6 w-px bg-border mx-2" />
+
+          <div className="flex items-center bg-muted p-1 rounded-lg border">
+            <button
+              onClick={() => setViewMode("builder")}
+              className={cn(
+                "px-3 py-1 text-sm font-medium rounded-md transition-all",
+                viewMode === "builder"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Questions
+            </button>
+            <button
+              onClick={() => setViewMode("logic")}
+              className={cn(
+                "px-3 py-1 text-sm font-medium rounded-md transition-all",
+                viewMode === "logic"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Logic
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
@@ -323,49 +352,49 @@ export const BuilderHeader = memo(function BuilderHeader({
                 Design
               </Button>
 
-              
-            <Select
-              value={status}
-              onValueChange={async (value: "published" | "draft" | "closed") => {
-                setStatus(value);
-                try {
-                  const result = await updateFormStatus(formId, value);
-                  if (result.success) {
-                    toast.success(`Form ${value}`);
-                  } else {
-                    toast.error(result.error);
+
+              <Select
+                value={status}
+                onValueChange={async (value: "published" | "draft" | "closed") => {
+                  setStatus(value);
+                  try {
+                    const result = await updateFormStatus(formId, value);
+                    if (result.success) {
+                      toast.success(`Form ${value}`);
+                    } else {
+                      toast.error(result.error);
+                    }
+                  } catch (error) {
+                    toast.error("Failed to update status");
                   }
-                } catch (error) {
-                  toast.error("Failed to update status");
-                }
-              }}
-            >
-              <SelectTrigger size="lg" className="w-full">
-                <div className="flex items-center ">
-                  <SelectValue placeholder="Status" />
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="published">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                    Published
+                }}
+              >
+                <SelectTrigger size="lg" className="w-full">
+                  <div className="flex items-center ">
+                    <SelectValue placeholder="Status" />
                   </div>
-                </SelectItem>
-                <SelectItem value="draft">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-gray-500" />
-                    Draft
-                  </div>
-                </SelectItem>
-                <SelectItem value="closed">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-red-500" />
-                    Closed
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="published">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      Published
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="draft">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-gray-500" />
+                      Draft
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="closed">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-red-500" />
+                      Closed
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
           </div>

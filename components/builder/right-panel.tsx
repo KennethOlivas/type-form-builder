@@ -1,15 +1,12 @@
 "use client";
 
 import { memo, useState, useRef, useEffect } from "react";
-import { Settings, GitBranch } from "lucide-react";
 import { useBuilderStore } from "@/lib/store/builder-store";
 import { SettingsPanel } from "./settings-panel";
-
 import { LogicPanel } from "./logic-panel";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 export const RightPanel = memo(function RightPanel() {
-  const { rightPanelWidth, selectedQuestion, questions, setRightPanelWidth } =
+  const { rightPanelWidth, selectedQuestion, questions, setRightPanelWidth, viewMode } =
     useBuilderStore();
   const [isResizing, setIsResizing] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -77,34 +74,22 @@ export const RightPanel = memo(function RightPanel() {
 
       <div className="shrink-0 border-b border-gray-800 px-4 py-3">
         <span className="text-xs text-gray-500 font-medium uppercase tracking-wide">
-          Question Configuration
+          {viewMode === "builder" ? "Question Configuration" : "Logic Configuration"}
         </span>
-        {currentQuestion && (
+        {viewMode === "builder" && currentQuestion && (
           <p className="text-sm text-white mt-1 font-medium truncate">
             {currentQuestion.label || "Untitled Question"}
+          </p>
+        )}
+        {viewMode === "logic" && (
+          <p className="text-sm text-muted-foreground mt-1">
+            Configure logic jumps and conditional flows
           </p>
         )}
       </div>
 
       <div className="shrink-0">
-        <Tabs fullWidth defaultValue="settings" >
-          <TabsList className="w-full mt-2">
-            <TabsTrigger value="settings">
-              <Settings className="w-4 h-4" />
-              Settings
-            </TabsTrigger>
-            <TabsTrigger value="logic">
-              <GitBranch className="w-4 h-4" />
-              Logic
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="settings">
-            <SettingsPanel />
-          </TabsContent>
-          <TabsContent value="logic">
-            <LogicPanel />
-          </TabsContent>
-        </Tabs>
+        {viewMode === "builder" ? <SettingsPanel /> : <LogicPanel />}
       </div>
     </div>
   );

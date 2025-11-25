@@ -19,6 +19,8 @@ interface BuilderState {
   leftPanelCollapsed: boolean;
   rightPanelCollapsed: boolean;
   isInitialized: boolean;
+  viewMode: "builder" | "logic";
+  setViewMode: (mode: "builder" | "logic") => void;
   status: "published" | "draft" | "closed";
   setStatus: (status: "published" | "draft" | "closed") => void;
   setFormTitle: (title: string) => void;
@@ -59,6 +61,7 @@ const initialState = {
   formTitle: "Untitled Form",
   formDescription: "",
   status: "draft" as const,
+  viewMode: "builder" as const,
   questions: [],
   formStyle: {
     backgroundColor: "#1f2937",
@@ -92,6 +95,7 @@ const initialState = {
 export const useBuilderStore = create<BuilderState>((set, get) => ({
   ...initialState,
 
+  setViewMode: (mode) => set({ viewMode: mode }),
   setStatus: (status) => set({ status }),
   setFormTitle: (title) => set({ formTitle: title }),
   setFormDescription: (description) => set({ formDescription: description }),

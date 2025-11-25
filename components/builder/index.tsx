@@ -7,6 +7,7 @@ import { MobileSheets } from "./mobile-sheets";
 import { useEffect, useRef, useState } from "react";
 import { useFormData, useUpdateForm } from "@/hooks/use-forms";
 import { useBuilderStore } from "@/lib/store/builder-store";
+import { LogicMap } from "./logic-map/logic-map";
 
 interface BuilderProps {
   id: string;
@@ -20,6 +21,8 @@ export function Builder({ id, isNewForm }: BuilderProps) {
   const { data: formData } = useFormData(id);
   const updateFormMutation = useUpdateForm();
 
+  // ...
+
   const {
     formTitle,
     formDescription,
@@ -29,6 +32,7 @@ export function Builder({ id, isNewForm }: BuilderProps) {
     isInitialized,
     initializeForm,
     reset,
+    viewMode,
   } = useBuilderStore();
 
   const lastSavedStyleRef = useRef<string | null>(null);
@@ -98,11 +102,15 @@ export function Builder({ id, isNewForm }: BuilderProps) {
       <BuilderHeader formId={id} isNewForm={isNewForm} />
       <div className="flex h-[calc(100vh-73px)]">
         <AddItemPanel />
-        <QuestionList
-          formId={id}
-          isNewForm={isNewForm}
-          onMobileSheetOpen={() => setShowSettingsSheet(true)}
-        />
+        {viewMode === "builder" ? (
+          <QuestionList
+            formId={id}
+            isNewForm={isNewForm}
+            onMobileSheetOpen={() => setShowSettingsSheet(true)}
+          />
+        ) : (
+          <LogicMap />
+        )}
         <RightPanel />
       </div>
       <MobileSheets
