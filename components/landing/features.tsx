@@ -10,7 +10,7 @@ const features = [
     description: "One question at a time. Focus your users and improve data quality.",
     icon: Sparkles,
     className: "md:col-span-2",
-    image: "/smooth-scrolling-form-animation.jpg",
+    image: "/assets/logic.png",
   },
   {
     title: "Logic Jump",
