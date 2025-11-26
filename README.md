@@ -10,8 +10,9 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 ## ✨ Features
 
 ### 🎨 Form Builder
+
 - **Drag & Drop Interface**: Intuitive drag-and-drop question reordering using `@dnd-kit`
-- **Multiple Question Types**: 
+- **Multiple Question Types**:
   - Short Text
   - Long Text
   - Multiple Choice
@@ -27,9 +28,10 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 - **Mobile Responsive**: Fully responsive builder interface for all devices
 
 ### 🧠 Advanced Logic System
+
 - **Logic Jumps**: Create conditional navigation based on user responses
 - **Visual Logic Map**: Interactive node-based visualization of form flow using `@xyflow/react`
-- **Conditional Rules**: 
+- **Conditional Rules**:
   - Equals / Not Equals
   - Contains / Does Not Contain
   - Greater Than / Less Than
@@ -42,12 +44,13 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 - **Logic Panel**: Dedicated panel for configuring question logic with visual feedback
 
 ### 📊 Analytics Dashboard
+
 - **Real-time Metrics**:
   - Total views and submissions
   - Completion rate tracking
   - Average completion time
   - Bounce rate analysis
-- **Date Range Filtering**: 
+- **Date Range Filtering**:
   - Custom date ranges with calendar picker
   - Quick presets (Today, Last 7 Days, Last 30 Days, Last 90 Days)
   - Query parameter-based filtering with debouncing
@@ -65,6 +68,7 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 - **Export Capabilities**: Download response data for further analysis
 
 ### 🗂️ Workspace Management
+
 - **Multiple Workspaces**: Organize forms into different workspaces
 - **Personal & Team Workspaces**: Support for individual and collaborative environments
 - **Workspace Icons**: Customizable icons for easy identification
@@ -72,7 +76,8 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 - **Form Organization**: Filter and view forms by active workspace
 
 ### 🎨 Design Customization
-- **Theme System**: 
+
+- **Theme System**:
   - Pre-built themes (Modern, Classic, Minimal, Bold)
   - Custom theme creation
   - Live preview of theme changes
@@ -81,7 +86,7 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
   - Background colors
   - Text colors
   - Advanced color picker with HSL support
-- **Typography**: 
+- **Typography**:
   - Font family selection
   - Font size controls
   - Line height adjustments
@@ -92,6 +97,7 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
   - Shadow effects
 
 ### 🔐 Authentication & Security
+
 - **Better Auth Integration**: Secure authentication using `better-auth`
 - **Email/Password Authentication**: Traditional login system
 - **Session Management**: Secure session handling with token-based authentication
@@ -99,6 +105,7 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 - **Protected Routes**: Automatic route protection for authenticated pages
 
 ### 📱 Form Sharing & Publishing
+
 - **Form Status Management**:
   - Draft: Work in progress
   - Published: Live and accepting responses
@@ -109,6 +116,7 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 - **Share Modal**: Comprehensive sharing interface with copy-to-clipboard
 
 ### 📋 Response Management
+
 - **Response Table**: Sortable, filterable table of all submissions
 - **Individual Response View**: Detailed view of each submission
 - **Response Deletion**: Remove unwanted submissions
@@ -116,6 +124,7 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 - **Submission Tracking**: Track submission timestamps and metadata
 
 ### 🎯 User Experience
+
 - **Dark Mode**: Full dark mode support with `next-themes`
 - **Responsive Design**: Mobile-first design approach
 - **Loading States**: Skeleton loaders and loading indicators
@@ -127,6 +136,7 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 16 (App Router)
 - **UI Library**: React 19.2
 - **Language**: TypeScript 5
@@ -140,12 +150,14 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 - **Tables**: TanStack Table
 
 ### Backend
+
 - **Database**: PostgreSQL
 - **ORM**: Drizzle ORM
 - **Authentication**: Better Auth
 - **API**: Next.js API Routes (Server Actions)
 
 ### Additional Libraries
+
 - **State Management**: Zustand
 - **Date Handling**: date-fns, react-day-picker
 - **QR Codes**: qrcode
@@ -158,6 +170,7 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 20 or higher
 - PostgreSQL database
 - pnpm (recommended) or npm
@@ -165,19 +178,21 @@ A powerful, modern form builder application built with Next.js 16, featuring adv
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
 git clone <repository-url>
 cd type-form-builder
 ```
 
-2. **Install dependencies**
+2.**Install dependencies**
+
 ```bash
 pnpm install
 # or
 npm install
 ```
 
-3. **Set up environment variables**
+3.**Set up environment variables**
 
 Create a `.env` file in the root directory with the following variables:
 
@@ -193,28 +208,31 @@ BETTER_AUTH_URL=http://localhost:3000
 # Add any additional API keys or configuration
 ```
 
-4. **Set up the database**
+4.**Set up the database**
 
 Start PostgreSQL (using Docker Compose if available):
+
 ```bash
 docker-compose up -d
 ```
 
 Run database migrations:
+
 ```bash
 pnpm drizzle-kit push
 # or
 npx drizzle-kit push
 ```
 
-5. **Run the development server**
+5.**Run the development server**
+
 ```bash
 pnpm dev
 # or
 npm run dev
 ```
 
-6. **Open your browser**
+6.**Open your browser**
 
 Navigate to [http://localhost:3000](http://localhost:3000)
 
@@ -267,44 +285,52 @@ type-form-builder/
 ### Core Tables
 
 #### `user`
+
 - User authentication and profile information
 - Email verification status
 - Creation and update timestamps
 
 #### `workspace`
+
 - Workspace organization
 - Personal and team workspace types
 - Custom icons and naming
 
 #### `form`
+
 - Form metadata (title, description)
 - Status (draft, published, closed)
 - Style configuration (JSONB)
 - Welcome screen configuration
 
 #### `question`
+
 - Question content and configuration
 - Question type and validation rules
 - Position ordering
 - Options for multiple choice questions
 
 #### `logic_jump`
+
 - Conditional navigation configuration
 - Default destination settings
 - Enable/disable toggle
 
 #### `logic_rule`
+
 - Conditional rules for logic jumps
 - Operators (equals, contains, greater than, etc.)
 - Destination question references
 
 #### `submission`
+
 - Form responses
 - Answer data (JSONB)
 - Device and location metadata
 - Submission timestamps
 
 #### `form_visit`
+
 - Form view tracking
 - Device, browser, OS information
 - Geographic data
@@ -313,13 +339,17 @@ type-form-builder/
 ## 🔧 Configuration
 
 ### Drizzle Configuration
+
 Database configuration is managed in `drizzle.config.ts`:
+
 - Schema location: `./db/schema.ts`
 - Migrations output: `./drizzle`
 - Dialect: PostgreSQL
 
 ### Tailwind Configuration
+
 Custom Tailwind configuration with:
+
 - CSS variables for theming
 - Custom animations
 - Extended color palette
@@ -366,13 +396,16 @@ Custom Tailwind configuration with:
 The application supports comprehensive theming:
 
 ### Pre-built Themes
+
 - **Modern**: Clean, contemporary design
 - **Classic**: Traditional form styling
 - **Minimal**: Simple, distraction-free
 - **Bold**: High-contrast, vibrant colors
 
 ### Custom Themes
+
 Create custom themes by configuring:
+
 - Primary and secondary colors
 - Background colors
 - Text colors
@@ -419,6 +452,7 @@ The easiest way to deploy is using [Vercel](https://vercel.com):
 ### Environment Variables for Production
 
 Ensure all environment variables are set in your production environment:
+
 - `DATABASE_URL`: Production PostgreSQL connection string
 - `BETTER_AUTH_SECRET`: Strong secret key for authentication
 - `BETTER_AUTH_URL`: Production URL
@@ -436,16 +470,19 @@ npm run lint
 ### Database Migrations
 
 Generate migrations:
+
 ```bash
 pnpm drizzle-kit generate
 ```
 
 Push schema changes:
+
 ```bash
 pnpm drizzle-kit push
 ```
 
 View database studio:
+
 ```bash
 pnpm drizzle-kit studio
 ```
