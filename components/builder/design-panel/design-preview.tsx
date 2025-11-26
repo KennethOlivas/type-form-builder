@@ -39,7 +39,7 @@ export function DesignPreview({ formStyle }: DesignPreviewProps) {
                         <span className="text-sm font-medium opacity-60">1 →</span>
                         <div className="flex-1">
                             <h4 className="text-lg font-semibold mb-1">
-                                What's your favorite color?
+                                What&apos;s your favorite color?
                             </h4>
                             <p className="text-sm opacity-75">
                                 Tell us about your color preference

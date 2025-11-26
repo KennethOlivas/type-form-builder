@@ -10,22 +10,11 @@ import { DashboardToolbar } from "@/components/dashboard/dashboard-toolbar";
 import { FormCard } from "@/components/dashboard/form-card";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { Card } from "@/components/ui/card";
+import { FormWithResponses } from "@/lib/types/db";
 
-interface Form {
-    id: string;
-    title: string;
-    description: string;
-    createdAt: Date;
-    updatedAt: Date;
-    responses: number;
-    style: any;
-    welcomeScreen: any;
-    createdBy: string;
-    status: "published" | "draft" | "closed";
-}
 
 interface DashboardContentProps {
-    forms: Form[];
+    forms: FormWithResponses[];
     activeWorkspaceId?: string;
     hasWorkspace?: boolean;
 }

@@ -1,7 +1,6 @@
 import { memo } from "react";
 import { Handle, Position, NodeProps } from "@xyflow/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
     Type,
     List,
@@ -15,7 +14,6 @@ import {
     Phone,
     Upload
 } from "lucide-react";
-import { Question } from "@/lib/local-data-service";
 
 const getIcon = (type: string) => {
     switch (type) {
@@ -67,7 +65,7 @@ export const QuestionNode = memo(({ data, selected }: NodeProps) => {
                                     type="source"
                                     position={Position.Right}
                                     id={option}
-                                    className="!bg-muted-foreground !w-2 !h-2 right-[-10px]"
+                                    className="bg-muted-foreground! w-2! h-2! -right-2.5"
                                 />
                             </div>
                         ))}
@@ -83,7 +81,7 @@ export const QuestionNode = memo(({ data, selected }: NodeProps) => {
                                     type="source"
                                     position={Position.Right}
                                     id={option}
-                                    className="!bg-muted-foreground !w-2 !h-2 right-[-10px]"
+                                    className="bg-muted-foreground! w-2! h-2! -right-2.5"
                                 />
                             </div>
                         ))}
@@ -97,7 +95,7 @@ export const QuestionNode = memo(({ data, selected }: NodeProps) => {
                             type="source"
                             position={Position.Right}
                             id="default"
-                            className="!bg-muted-foreground !w-2 !h-2 right-[-10px]"
+                            className="bg-muted-foreground! w-2! h-2! -right-2.5"
                         />
                     </div>
                 )}
@@ -109,7 +107,7 @@ export const QuestionNode = memo(({ data, selected }: NodeProps) => {
                         type="source"
                         position={Position.Right}
                         id="default-handle"
-                        className="!bg-gray-300 !w-2 !h-2 right-[-10px]"
+                        className="bg-gray-300! w-2! h-2! -right-2.5"
                     />
                 </div>
             </CardContent>

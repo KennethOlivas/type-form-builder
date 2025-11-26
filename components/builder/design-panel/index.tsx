@@ -2,7 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useBuilderStore } from "@/lib/store/builder-store";
-import { themePresets, type ThemeStyle } from "@/lib/theme-presets";
+import { themePresets } from "@/lib/theme-presets";
 import { DesignPreview } from "./design-preview";
 import { ThemePresetCard } from "./theme-preset-card";
 import { CustomStylesTab } from "./custom-styles-tab";

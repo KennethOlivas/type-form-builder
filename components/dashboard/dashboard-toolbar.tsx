@@ -1,19 +1,12 @@
-"use client";
-
 import {
-    ArrowDownAZ,
-    ArrowUpAZ,
-    Calendar,
     Filter,
     LayoutGrid,
     List,
-    MoreHorizontal,
     SortAsc,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuLabel,
     DropdownMenuSeparator,

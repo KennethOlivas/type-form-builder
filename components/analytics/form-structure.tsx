@@ -2,9 +2,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Circle, List, Type, Calendar, Star, Upload, AlignLeft, Hash } from "lucide-react"
+import { DbQuestion } from "@/lib/types/db"
 
 interface FormStructureProps {
-    questions: any[]
+    questions: DbQuestion[]
 }
 
 export function FormStructure({ questions }: FormStructureProps) {
@@ -45,7 +46,7 @@ export function FormStructure({ questions }: FormStructureProps) {
                             <p className="text-sm text-muted-foreground mb-4">{q.description}</p>
                         )}
 
-                        {q.options && q.options.length > 0 && (
+                        {Array.isArray(q.options) && q.options.length > 0 && (
                             <div className="space-y-2">
                                 <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Options</h4>
                                 <ScrollArea className="h-[100px] w-full rounded-md border p-2">

@@ -55,28 +55,30 @@ import {
 } from "@/components/ui/alert-dialog"
 import { deleteSubmission } from "@/actions"
 import { useMemo, useState } from "react"
+import { DbQuestion, DbSubmission } from "@/lib/types/db"
 
 interface ResponsesTableProps {
-    submissions: any[]
-    questions: any[]
+    submissions: DbSubmission[]
+    questions: DbQuestion[]
     refreshData: () => void
 }
 
 export function ResponsesTable({ submissions, questions, refreshData }: ResponsesTableProps) {
+    "use no memo"
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})
     const [globalFilter, setGlobalFilter] = useState("")
 
-    const [selectedSubmission, setSelectedSubmission] = useState<any>(null)
+    const [selectedSubmission, setSelectedSubmission] = useState<DbSubmission | null>(null)
     const [isDetailsOpen, setIsDetailsOpen] = useState(false)
     const [deleteId, setDeleteId] = useState<string | null>(null)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
 
     // Define columns dynamically
-    const columns: ColumnDef<any>[] = useMemo(() => {
-        const baseColumns: ColumnDef<any>[] = [
+    const columns: ColumnDef<DbSubmission>[] = useMemo(() => {
+        const baseColumns: ColumnDef<DbSubmission>[] = [
             {
                 accessorKey: "submittedAt",
                 header: ({ column }) => {
@@ -94,18 +96,18 @@ export function ResponsesTable({ submissions, questions, refreshData }: Response
             },
         ]
 
-        const questionColumns: ColumnDef<any>[] = questions.map((q) => ({
+        const questionColumns: ColumnDef<DbSubmission>[] = questions.map((q) => ({
             accessorKey: `answers.${q.id}`, // Access nested answers
             id: q.id,
             header: q.label,
             cell: ({ row }) => {
-                const answer = (row.original.answers as any)[q.id]
+                const answer = row.original.answers[q.id]
                 if (Array.isArray(answer)) return answer.join(", ")
                 return answer
             },
         }))
 
-        const actionColumn: ColumnDef<any> = {
+        const actionColumn: ColumnDef<DbSubmission> = {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
@@ -323,26 +325,29 @@ export function ResponsesTable({ submissions, questions, refreshData }: Response
 
                     <ScrollArea className="flex-1 mx-auto">
                         <div className="space-y-6 py-6">
-                            {selectedSubmission && questions.map((q, index) => (
-                                <div key={q.id} className="bg-muted/30 p-4 rounded-lg border space-y-2 mx-2">
-                                    <div className="flex items-start gap-3">
-                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
-                                            {index + 1}
-                                        </span>
-                                        <div className="space-y-1 flex-1">
-                                            <h4 className="text-sm font-medium leading-none">{q.label}</h4>
-                                            <p className="text-xs text-muted-foreground">{q.type}</p>
+                            {selectedSubmission && questions.map((q, index) => {
+                                const answer = selectedSubmission.answers[q.id]
+                                return (
+                                    <div key={q.id} className="bg-muted/30 p-4 rounded-lg border space-y-2 mx-2">
+                                        <div className="flex items-start gap-3">
+                                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+                                                {index + 1}
+                                            </span>
+                                            <div className="space-y-1 flex-1">
+                                                <h4 className="text-sm font-medium leading-none">{q.label}</h4>
+                                                <p className="text-xs text-muted-foreground">{q.type}</p>
+                                            </div>
+                                        </div>
+                                        <div className="pl-9">
+                                            <p className="text-sm font-medium">
+                                                {Array.isArray(answer)
+                                                    ? answer.join(", ")
+                                                    : answer || <span className="text-muted-foreground italic">No answer</span>}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="pl-9">
-                                        <p className="text-sm font-medium">
-                                            {Array.isArray(selectedSubmission.answers[q.id])
-                                                ? selectedSubmission.answers[q.id].join(", ")
-                                                : selectedSubmission.answers[q.id] || <span className="text-muted-foreground italic">No answer</span>}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
+                                )
+                            })}
 
                             {selectedSubmission && (
                                 <div className="border-t pt-6 mt-6 space-y-4 px-4">
@@ -367,8 +372,10 @@ export function ResponsesTable({ submissions, questions, refreshData }: Response
                             variant="destructive"
                             className="w-full"
                             onClick={() => {
-                                setDeleteId(selectedSubmission.id)
-                                setIsDeleteOpen(true)
+                                if (selectedSubmission) {
+                                    setDeleteId(selectedSubmission.id)
+                                    setIsDeleteOpen(true)
+                                }
                             }}
                         >
                             <Trash className="mr-2 h-4 w-4" />

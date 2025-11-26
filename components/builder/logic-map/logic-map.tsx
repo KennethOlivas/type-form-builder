@@ -89,7 +89,7 @@ function LogicMapContent() {
         );
         setEdges([...layoutedEdges]);
         fitView({ padding: 0.2 });
-    }, [nodes, edges, setNodes, setEdges, fitView]);
+    }, [nodes, edges, setEdges, fitView]);
 
     const onNodeClick = useCallback(
         (_event: React.MouseEvent, node: Node) => {

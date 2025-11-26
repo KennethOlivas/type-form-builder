@@ -18,6 +18,7 @@ import {
     Legend,
 } from "recharts"
 import { FormStructure } from "./form-structure"
+import { AnalyticsQuestionData, DbQuestion } from "@/lib/types/db"
 
 interface ChartsSectionProps {
     charts: {
@@ -25,8 +26,8 @@ interface ChartsSectionProps {
         responseTimeline: { date: string; count: number }[]
         funnel: { name: string; value: number }[]
     }
-    questionAnalysis: Record<string, any>
-    questions: any[]
+    questionAnalysis:  Record<string, AnalyticsQuestionData>
+    questions: DbQuestion[]
 }
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"]
@@ -170,7 +171,7 @@ export function ChartsSection({ charts, questionAnalysis, questions }: ChartsSec
                                         <div className="space-y-2">
                                             <h4 className="text-sm font-semibold">Recent Answers:</h4>
                                             <ul className="space-y-1">
-                                                {analysis.recent.length > 0 ? (
+                                                {analysis.recent && analysis.recent.length > 0 ? (
                                                     analysis.recent.map((ans: string, i: number) => (
                                                         <li key={i} className="text-sm p-2 bg-muted rounded-md truncate">
                                                             {ans}
