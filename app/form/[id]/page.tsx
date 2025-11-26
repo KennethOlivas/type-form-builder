@@ -4,12 +4,41 @@ import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const form = await getPublicFormById(id);
+
+  if (!form.success || !form.data) {
+    return {
+      title: "Form Not Found",
+    };
+  }
+
+  return {
+    title: form.data.title,
+    description: form.data.description || "Please fill out this form.",
+    openGraph: {
+      title: form.data.title,
+      description: form.data.description || "Please fill out this form.",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: form.data.title,
+      description: form.data.description || "Please fill out this form.",
+    },
+  };
+}
 
 export default async function FormBuilderPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+}: Props) {
   const { id } = await params;
   const result = await getPublicFormById(id);
 

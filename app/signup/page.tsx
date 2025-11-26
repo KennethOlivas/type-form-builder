@@ -89,7 +89,7 @@ export default function SignupPage() {
     } catch (error) {
       toast.error(
         "Failed to sign up. Please try again." +
-          (error instanceof Error ? ` ${error.message}` : ""),
+        (error instanceof Error ? ` ${error.message}` : ""),
       );
     }
 

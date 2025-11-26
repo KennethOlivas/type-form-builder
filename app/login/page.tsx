@@ -80,7 +80,7 @@ export default function LoginPage() {
     } catch (error) {
       toast.error(
         "Failed to sign in. Please check your credentials." +
-          (error instanceof Error ? ` ${error.message}` : ""),
+        (error instanceof Error ? ` ${error.message}` : ""),
       );
     }
   };

@@ -1,10 +1,36 @@
 import { Builder } from "@/components/builder";
+import { getFormById } from "@/actions/form-actions";
+import { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+
+  if (id === "new") {
+    return {
+      title: "New Form - Builder",
+    };
+  }
+
+  const form = await getFormById(id);
+
+  if (!form.success || !form.data) {
+    return {
+      title: "Builder",
+    };
+  }
+
+  return {
+    title: `Builder - ${form.data.title}`,
+  };
+}
 
 export default async function FormBuilderPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+}: Props) {
   const { id } = await params;
   const isNewForm = id === "new";
 

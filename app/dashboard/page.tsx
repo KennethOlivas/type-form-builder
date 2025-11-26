@@ -5,6 +5,12 @@ import { getWorkspaces } from "@/actions/workspace-actions";
 import { FormsSkeleton } from "@/components/skeletons/forms-skeleton";
 import { redirect } from "next/navigation";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
+
 async function DashboardData({
   activeWorkspaceId,
 }: {
@@ -53,7 +59,7 @@ export default async function DashboardPage({
 function DashboardSkeleton() {
   return (
     <>
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="flex h-16 items-center px-6">
           <div className="flex-1" />
         </div>
